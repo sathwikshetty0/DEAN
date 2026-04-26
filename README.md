@@ -1,81 +1,85 @@
-# D-EAN — Decentralized Emergency Assistance Network
+# D-EAN | Decentralized Emergency Assistance Network
 
-> **"Whether the internet works or not — your SOS always gets through."**
+**D-EAN** is a resilient emergency coordination platform designed for community-driven response. It ensures that SOS alerts are delivered to nearby responders whether the internet is working or not, using a unique dual-routing architecture.
 
-D-EAN is a production-grade community-driven emergency coordination platform. It is designed to work seamlessly in both high-connectivity environments (via Supabase Realtime) and total network outages (via peer-to-peer BroadcastChannel routing).
+## 🚀 Prototype Quick Start (Auth-Free)
 
-## 🚀 Key Features
+This version of the platform has been optimized for rapid prototyping and demonstration. Standard authentication barriers have been removed to allow one-click access to all roles.
 
-- **Dual Routing Architecture**: Automatically switches between **Cloud Mode** (Online) and **P2P Mode** (Offline).
-- **Real-Time Coordination**: Live responder tracking and status updates using Supabase Realtime.
-- **Role-Based Access**: Specialized interfaces for **Distressed Users**, **Community Responders**, and **System Admins**.
-- **Resilient Data Sync**: Offline alerts are queued in `localStorage` and automatically synced when connectivity is restored.
-- **Interactive Maps**: Full Leaflet integration for precision emergency locating.
+### 1. Database Setup (Supabase)
+Run the following SQL in your **Supabase SQL Editor** to initialize the schema and enable unrestricted access:
 
-## 🛠 Tech Stack
+```sql
+-- Disable security barriers for prototype access
+ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE alerts DISABLE ROW LEVEL SECURITY;
+ALTER TABLE alert_timeline DISABLE ROW LEVEL SECURITY;
+ALTER TABLE logs DISABLE ROW LEVEL SECURITY;
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Backend/BaaS**: Supabase (Auth, PostgreSQL, Realtime)
-- **Styling**: Tailwind CSS + Custom Dark Design System
-- **Animations**: Framer Motion
-- **Maps**: Leaflet.js (OpenStreetMap / CartoDB Dark)
-- **Forms**: React Hook Form + Zod
+-- Create prototype identities with fixed IDs
+DELETE FROM profiles;
+INSERT INTO profiles (id, name, email, role)
+VALUES 
+  ('00000000-0000-0000-0000-000000000001', 'Arjun Rao', 'arjun@dean.com', 'user'),
+  ('00000000-0000-0000-0000-000000000002', 'Riya Sharma', 'riya@dean.com', 'responder'),
+  ('00000000-0000-0000-0000-000000000003', 'System Admin', 'admin@dean.com', 'admin');
+```
 
-## 🏁 Getting Started
+### 2. Environment Configuration
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
 
-### Prerequisites
+### 3. Installation & Data Sync
+```bash
+# Install dependencies
+npm install
 
-- Node.js 18+
-- Supabase Account (Free tier works perfectly)
+# Seed the prototype data
+npm run seed
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/sathwikshetty0/DEAN.git
-   cd DEAN
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Supabase Configuration**
-   - Create a new project at [supabase.com](https://supabase.com).
-   - Run the SQL schema found in `supabase/schema.sql` in the SQL Editor.
-   - Enable **Realtime** for `alerts` and `logs` tables in the Database > Replication settings.
-
-4. **Environment Setup**
-   Create a `.env.local` file with your keys:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   ```
-
-5. **Run Development Server**
-   ```bash
-   npm run dev
-   ```
-
-## 🧪 Testing P2P Mode
-
-1. Open the application in two different tabs.
-2. In one tab, open Chrome DevTools > Network and toggle **Offline**.
-3. Trigger an SOS alert.
-4. Observe the second tab receive the alert via the `BroadcastChannel` API.
-5. Toggle the first tab back to **Online** to see the alert sync to the database.
-
-## 👥 Demo Accounts
-
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Admin** | `admin@dean.com` | `admin123` |
-| **Responder** | `riya@dean.com` | `resp123` |
-| **User** | `arjun@dean.com` | `user123` |
+# Start development server
+npm run dev
+```
 
 ---
 
-Built with ❤️ for Mangaluru.
+## 🛠 How It Works
+
+### 1. Dual Routing Architecture
+D-EAN monitors network connectivity in real-time. When a user triggers an SOS:
+- **Cloud Mode (Online)**: Data is synced to Supabase. Responders are notified via Realtime subscriptions.
+- **P2P Mode (Offline)**: If the internet is down, the system uses the **BroadcastChannel API** to create a local mesh network between open browser tabs on the same origin. Alerts are delivered locally and queued for synchronization once connectivity returns.
+
+### 2. Role-Based Dashboards
+- **Citizen (User)**: One-tap SOS triggering, location tracking, and responder arrival monitoring.
+- **Volunteer (Responder)**: Live map of nearby alerts, mission acceptance, and status updates (En Route, Resolved).
+- **Administrator**: Global overview of network activity, responder management, and system log exports.
+
+### 3. Tech Stack
+- **Frontend**: Next.js 14 (App Router), Tailwind CSS, Framer Motion.
+- **Database/Auth**: Supabase (PostgreSQL, Realtime).
+- **Mapping**: React-Leaflet with custom vector markers.
+- **State/Network**: React Context API + custom BroadcastChannel hooks.
+
+---
+
+## ⚠️ Critical Troubleshooting
+
+### "Map Container Already Initialized"
+If you see this error, it is usually due to Hot Module Replacement (HMR). The platform uses unique `key` props on Map components to ensure Leaflet cleans up correctly during re-renders.
+
+### Wrong Next.js Version (v16 Error)
+If your terminal reports **Next.js 16.2.4**, your environment is corrupted by a parent-folder lockfile. 
+**Solution**: 
+1. Delete any `package-lock.json` in the parent folders (e.g., `C:\projects\package-lock.json`).
+2. Delete `node_modules` and `package-lock.json` in the `DEAN` folder.
+3. Run `npm install`.
+
+---
+
+## 🏗 Built for Mangaluru
+Designed to provide a safety net for local communities during natural disasters or network outages.
