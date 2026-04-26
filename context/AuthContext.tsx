@@ -11,6 +11,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  loginAsRole: (role: 'user' | 'responder' | 'admin') => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,11 +56,53 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/login');
+    setProfile(null);
+    setUser(null);
+    router.push('/');
+  };
+
+  const loginAsRole = async (role: 'user' | 'responder' | 'admin') => {
+    setLoading(true);
+    let email = '';
+    let password = '';
+
+    if (role === 'admin') {
+      email = 'admin@dean.com';
+      password = 'admin123';
+    } else if (role === 'responder') {
+      email = 'riya@dean.com';
+      password = 'resp123';
+    } else {
+      email = 'arjun@dean.com';
+      password = 'user123';
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+      console.error('Mock login failed:', error.message);
+      setLoading(false);
+      return;
+    }
+
+    // Explicitly fetch profile to ensure state is ready before redirect
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single();
+
+    setProfile(profileData);
+    setUser(data.user);
+    setLoading(false);
+
+    if (role === 'admin') router.push('/admin');
+    else if (role === 'responder') router.push('/responder');
+    else router.push('/dashboard');
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut }}>
+    <AuthContext.Provider value={{ user, profile, loading, signOut, loginAsRole }}>
       {children}
     </AuthContext.Provider>
   );
