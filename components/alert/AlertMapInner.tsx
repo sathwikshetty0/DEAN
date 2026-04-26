@@ -43,11 +43,13 @@ const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) 
     coords.push([responderLocation.lat, responderLocation.lng]);
   }
 
-  // Use a key based on the initial center to force a fresh container if location changes significantly
-  // or on re-mount to avoid "Map container already initialized"
+  // Force a fresh container on re-mount to avoid "Map container already initialized"
+  // We use a combination of coordinates to make it unique per location
+  const mapKey = `map-${userLocation.lat.toFixed(4)}-${userLocation.lng.toFixed(4)}`;
+
   return (
     <MapContainer 
-      key={`map-${userLocation.lat}-${userLocation.lng}`}
+      key={mapKey}
       center={[userLocation.lat, userLocation.lng]} 
       zoom={15} 
       style={{ height: '100%', width: '100%' }}

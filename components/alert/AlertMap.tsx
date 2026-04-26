@@ -3,7 +3,10 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-import AlertMapInner from './AlertMapInner';
+const AlertMapInner = dynamic(() => import('./AlertMapInner'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-[var(--bg-tertiary)] animate-pulse rounded-2xl" />
+});
 
 interface AlertMapProps {
   userLocation: { lat: number; lng: number };
