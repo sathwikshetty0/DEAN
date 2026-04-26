@@ -43,8 +43,11 @@ const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) 
     coords.push([responderLocation.lat, responderLocation.lng]);
   }
 
+  // Use a key based on the initial center to force a fresh container if location changes significantly
+  // or on re-mount to avoid "Map container already initialized"
   return (
     <MapContainer 
+      key={`map-${userLocation.lat}-${userLocation.lng}`}
       center={[userLocation.lat, userLocation.lng]} 
       zoom={15} 
       style={{ height: '100%', width: '100%' }}
