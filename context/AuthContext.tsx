@@ -1,13 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
 import { Profile } from '@/lib/types/app.types';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
-  user: User | null;
+  user: any | null;
   profile: Profile | null;
   loading: boolean;
   signOut: () => Promise<void>;
@@ -16,84 +14,38 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// FIXED PROTOTYPE IDS matching the SQL script
+const MOCK_PROFILES: Record<string, Profile> = {
+  user: { id: '00000000-0000-0000-0000-000000000001', name: 'Arjun Rao', email: 'arjun@dean.com', role: 'user' },
+  responder: { id: '00000000-0000-0000-0000-000000000002', name: 'Riya Sharma', email: 'riya@dean.com', role: 'responder' },
+  admin: { id: '00000000-0000-0000-0000-000000000003', name: 'System Admin', email: 'admin@dean.com', role: 'admin' },
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
   const router = useRouter();
 
   useEffect(() => {
-    const fetchProfile = async (userId: string) => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-      
-      if (!error) setProfile(data);
-    };
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        
-        if (currentUser) {
-          await fetchProfile(currentUser.id);
-        } else {
-          setProfile(null);
-        }
-        
-        setLoading(false);
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabase]);
+    // Check local storage for persisted role
+    const savedRole = localStorage.getItem('dean_prototype_role');
+    if (savedRole && MOCK_PROFILES[savedRole]) {
+      setProfile(MOCK_PROFILES[savedRole]);
+    }
+    setLoading(false);
+  }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    localStorage.removeItem('dean_prototype_role');
     setProfile(null);
-    setUser(null);
     router.push('/');
   };
 
   const loginAsRole = async (role: 'user' | 'responder' | 'admin') => {
     setLoading(true);
-    let email = '';
-    let password = '';
-
-    if (role === 'admin') {
-      email = 'admin@dean.com';
-      password = 'admin123';
-    } else if (role === 'responder') {
-      email = 'riya@dean.com';
-      password = 'resp123';
-    } else {
-      email = 'arjun@dean.com';
-      password = 'user123';
-    }
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    
-    if (error) {
-      console.error('Mock login failed:', error.message);
-      setLoading(false);
-      return;
-    }
-
-    // Explicitly fetch profile to ensure state is ready before redirect
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', data.user.id)
-      .single();
-
-    setProfile(profileData);
-    setUser(data.user);
+    const mockProfile = MOCK_PROFILES[role];
+    setProfile(mockProfile);
+    localStorage.setItem('dean_prototype_role', role);
     setLoading(false);
 
     if (role === 'admin') router.push('/admin');
@@ -102,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut, loginAsRole }}>
+    <AuthContext.Provider value={{ user: profile, profile, loading, signOut, loginAsRole }}>
       {children}
     </AuthContext.Provider>
   );
