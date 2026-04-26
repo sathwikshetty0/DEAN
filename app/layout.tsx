@@ -7,6 +7,8 @@ import { NetworkProvider } from "@/context/NetworkContext";
 import { AlertProvider } from "@/context/AlertContext";
 import { OfflineBanner } from "@/components/shared/OfflineBanner";
 
+export const dynamic = "force-dynamic";
+
 const syne = Syne({
   subsets: ["latin"],
   weight: ["400", "600", "700", "800"],

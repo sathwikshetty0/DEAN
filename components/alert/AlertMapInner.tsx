@@ -44,12 +44,13 @@ const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) 
   }
 
   // Force a fresh container on re-mount to avoid "Map container already initialized"
-  // We use a combination of coordinates to make it unique per location
-  const mapKey = `map-${userLocation.lat.toFixed(4)}-${userLocation.lng.toFixed(4)}`;
+  // We use a combination of coordinates and a random string to be absolutely sure
+  const mapKey = React.useMemo(() => `map-${Math.random().toString(36).substring(7)}`, [userLocation.lat, userLocation.lng]);
 
   return (
     <MapContainer 
       key={mapKey}
+      id={mapKey}
       center={[userLocation.lat, userLocation.lng]} 
       zoom={15} 
       style={{ height: '100%', width: '100%' }}
