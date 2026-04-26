@@ -15,8 +15,18 @@ interface AlertMapProps {
 }
 
 export const AlertMap = (props: AlertMapProps) => {
+  // Use a unique key on the wrapper to force React to recreate the DOM node
+  // This is the most reliable way to fix "Map container already initialized"
+  const forceRemountKey = React.useMemo(() => 
+    `map-wrap-${props.userLocation.lat}-${props.userLocation.lng}-${Math.random()}`, 
+    [props.userLocation.lat, props.userLocation.lng]
+  );
+
   return (
-    <div className={`w-full overflow-hidden rounded-2xl ${props.size === 'small' ? 'h-[150px]' : 'h-[300px]'}`}>
+    <div 
+      key={forceRemountKey}
+      className={`w-full overflow-hidden rounded-2xl ${props.size === 'small' ? 'h-[150px]' : 'h-[300px]'}`}
+    >
       <AlertMapInner {...props} />
     </div>
   );
