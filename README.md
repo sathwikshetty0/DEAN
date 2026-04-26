@@ -79,6 +79,47 @@ If your terminal reports **Next.js 16.2.4**, your environment is corrupted by a 
 2. Delete `node_modules` and `package-lock.json` in the `DEAN` folder.
 3. Run `npm install`.
 
+## 📊 Database Architecture
+
+The platform uses a relational PostgreSQL schema (via Supabase) designed for high-speed lookups and mission tracking.
+
+### Schema Relationship Diagram
+```mermaid
+erDiagram
+    PROFILES ||--o{ ALERTS : "triggers/responds"
+    ALERTS ||--|{ ALERT_TIMELINE : "has history"
+    PROFILES {
+        uuid id PK "matches Auth ID"
+        text name
+        text role "user | responder | admin"
+        text[] skills "responder only"
+        text zone
+    }
+    ALERTS {
+        uuid id PK
+        text alert_code "DEAN-XXXX"
+        text emergency_type "medical | fire | accident | flood"
+        text status "pending | accepted | en_route | resolved"
+        text routing_mode "cloud | p2p"
+        float location_lat
+        float location_lng
+        uuid user_id FK
+        uuid responder_id FK
+    }
+    ALERT_TIMELINE {
+        uuid id PK
+        uuid alert_id FK
+        text status
+        timestamp created_at
+    }
+```
+
+### Table Descriptions
+- **`profiles`**: Extended user data. The `id` matches the Supabase Auth UUID.
+- **`alerts`**: Stores current emergency state and geolocation.
+- **`alert_timeline`**: An immutable ledger of every status change for an alert, used for analytics and responder performance tracking.
+- **`logs`**: General system audit trail for admin oversight.
+
 ---
 
 ## 🏗 Built for Mangaluru
