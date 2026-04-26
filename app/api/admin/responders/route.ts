@@ -1,17 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function PATCH(req: NextRequest) {
+export async function GET() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { is_available } = await req.json();
-
-  const { data, error } = await (supabase.from('profiles') as any)
-    .update({ is_available })
-    .eq('id', user.id)
-    .select().single();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('role', 'responder')
+    .order('created_at', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

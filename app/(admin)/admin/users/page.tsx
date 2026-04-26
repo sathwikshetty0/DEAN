@@ -32,8 +32,7 @@ export default function AdminUsers() {
 
   const toggleStatus = async (id: string, current: boolean) => {
     try {
-      const { error } = await supabase
-        .from('profiles')
+      const { error } = await (supabase.from('profiles') as any)
         .update({ is_active: !current })
         .eq('id', id);
       

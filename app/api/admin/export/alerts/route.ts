@@ -14,7 +14,7 @@ export async function GET() {
   if (!alerts) return new Response('No data', { status: 404 });
 
   const headers = ['Alert Code', 'Type', 'Status', 'Mode', 'Created At'];
-  const rows = alerts.map(a => [
+  const rows = (alerts as any[]).map(a => [
     a.alert_code,
     a.emergency_type,
     a.status,

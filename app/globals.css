@@ -1,8 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import "tailwindcss";
 @import 'leaflet/dist/leaflet.css';
+
+@theme {
+  --color-sos: #FF2D55;
+  --color-cloud: #3B82F6;
+  --color-p2p: #F59E0B;
+  --color-safe: #10B981;
+}
 
 :root {
   --bg-primary: #0A0E1A;
@@ -30,12 +34,22 @@
   --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-tertiary) var(--bg-primary);
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
 }
 
-/* Custom Component Styles */
+h1, h2, h3, h4, h5, h6, .font-syne {
+  font-family: var(--font-syne), system-ui, sans-serif;
+}
+
+/* ── SOS Button ── */
 .sos-button {
   width: 160px; height: 160px; border-radius: 50%;
   background: radial-gradient(circle, #FF2D55 0%, #CC0033 100%);
@@ -50,7 +64,7 @@ body {
 }
 .sos-button:hover { transform: scale(1.05); box-shadow: var(--shadow-sos); }
 .sos-button:active { transform: scale(0.93); }
-.sos-button.loading { background: #880020; animation: none; }
+.sos-button.loading { background: #880020; animation: none; pointer-events: none; }
 .sos-button.p2p-mode::after {
   content: ''; position: absolute;
   width: 180px; height: 180px; border-radius: 50%;
@@ -69,27 +83,49 @@ body {
   100% { transform: scale(1.5); opacity: 0; }
 }
 
-/* Network Badge Pulse */
+/* ── Network Badge Pulse ── */
 .network-pulse {
-  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-
-@keyframes pulse-ring {
+@keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: .5; }
+  50% { opacity: .4; }
 }
 
-/* Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 8px;
+/* ── Offline Banner ── */
+.offline-banner {
+  animation: slide-down 0.4s ease-out;
 }
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+@keyframes slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
-::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
-  border-radius: 10px;
+
+/* ── Skeleton Shimmer ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-elevated) 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-elevated);
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── No Scrollbar helper ── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Scrollbar Styles ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bg-elevated); }
+
+/* ── Leaflet overrides for dark theme ── */
+.leaflet-container {
+  background-color: var(--bg-primary) !important;
+}
+.leaflet-control-attribution {
+  display: none !important;
 }

@@ -39,8 +39,7 @@ export default function LoginPage() {
       if (error) throw error;
 
       // Fetch profile to redirect
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
+      const { data: profile, error: profileError } = await (supabase.from('profiles') as any)
         .select('role')
         .eq('id', data.user.id)
         .single();

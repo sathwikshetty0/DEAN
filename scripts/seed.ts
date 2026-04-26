@@ -51,12 +51,12 @@ async function seed() {
     }
 
     // Trigger should automatically create the profile, but let's update extra fields if needed
-    if (u.role === 'responder') {
-       await supabase.from('profiles').update({
-         skills: (u as any).skills,
-         zone: (u as any).zone
-       }).eq('id', authData.user.id);
-    }
+     if (u.role === 'responder') {
+        await (supabase.from('profiles') as any).update({
+          skills: (u as any).skills,
+          zone: (u as any).zone
+        }).eq('id', authData.user.id);
+     }
   }
 
   console.log('✅ Users seeded successfully.');
