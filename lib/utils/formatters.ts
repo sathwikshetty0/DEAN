@@ -97,3 +97,20 @@ export const getCompassDirection = (lat1: number, lon1: number, lat2: number, lo
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
   return directions[Math.round(brng / 45) % 8];
 };
+
+export const calculateETA = (distanceKm: number): number => {
+  // Average city speed 30km/h
+  const speedKmH = 30;
+  const timeHours = distanceKm / speedKmH;
+  return Math.round(timeHours * 60); // minutes
+};
+
+export const formatETA = (mins: number): string => {
+  if (mins < 1) return 'less than 1 min';
+  if (mins >= 60) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h}h ${m}m`;
+  }
+  return `${mins} mins`;
+};

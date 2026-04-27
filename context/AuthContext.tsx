@@ -17,7 +17,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // FIXED PROTOTYPE IDS matching the SQL script
 const MOCK_PROFILES: Record<string, Profile> = {
   user: { id: '00000000-0000-0000-0000-000000000001', name: 'Arjun Rao', email: 'arjun@dean.com', role: 'user' },
-  responder: { id: '00000000-0000-0000-0000-000000000002', name: 'Riya Sharma', email: 'riya@dean.com', role: 'responder' },
+  responder: { 
+    id: '00000000-0000-0000-0000-000000000002', 
+    name: 'Riya Sharma', 
+    email: 'riya@dean.com', 
+    role: 'responder',
+    zone: 'Mangaluru Central',
+    location_lat: 12.8752,
+    location_lng: 74.8427
+  },
   admin: { id: '00000000-0000-0000-0000-000000000003', name: 'System Admin', email: 'admin@dean.com', role: 'admin' },
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 
 // Fix for default marker icons in Leaflet + Next.js
@@ -62,7 +62,19 @@ const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) 
       />
       <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon} />
       {responderLocation && (
-        <Marker position={[responderLocation.lat, responderLocation.lng]} icon={responderIcon} />
+        <>
+          <Marker position={[responderLocation.lat, responderLocation.lng]} icon={responderIcon} />
+          <Polyline 
+            positions={[
+              [userLocation.lat, userLocation.lng],
+              [responderLocation.lat, responderLocation.lng]
+            ]} 
+            color="#3B82F6"
+            weight={4}
+            dashArray="10, 10"
+            opacity={0.6}
+          />
+        </>
       )}
       <MapRecenter coords={coords} />
     </MapContainer>

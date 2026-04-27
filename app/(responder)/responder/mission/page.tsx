@@ -10,6 +10,12 @@ import { StatusPill } from '@/components/shared/StatusPill';
 import { broadcastResponderLocation } from '@/hooks/useSupabaseRealtime';
 import { toast } from 'react-hot-toast';
 import { Navigation, CheckCircle, Clock, MapPin, Phone, MessageSquare, AlertTriangle, ChevronLeft } from 'lucide-react';
+import { 
+  formatDateTime, formatRelativeTime, 
+  calculateDistance, formatDistance, 
+  calculateETA, formatETA, 
+  getCompassDirection 
+} from '@/lib/utils/formatters';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
@@ -128,22 +134,55 @@ export default function MissionPage() {
         </div>
 
         <div className="p-8 space-y-8">
-           {/* Map */}
-           <div className="rounded-2xl border border-[var(--border-default)] overflow-hidden h-[300px] shadow-inner relative">
-              <AlertMap 
-                userLocation={{ lat: alert.location_lat, lng: alert.location_lng }}
-                responderLocation={currentPos}
-                size="large"
-              />
-              <div className="absolute top-4 right-4 bg-[var(--bg-primary)]/80 backdrop-blur-md p-3 rounded-xl border border-[var(--border-default)] text-[10px] font-bold space-y-2">
-                 <div className="flex items-center gap-2 text-sos">
-                    <div className="w-2 h-2 rounded-full bg-sos" /> Distressed User
+            {/* Map */}
+            <div className="rounded-2xl border border-[var(--border-default)] overflow-hidden h-[300px] shadow-inner relative">
+               <AlertMap 
+                 userLocation={{ lat: alert.location_lat, lng: alert.location_lng }}
+                 responderLocation={currentPos}
+                 size="large"
+               />
+               
+               {/* Floating Route Info */}
+               {currentPos && (
+                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-4 pointer-events-none">
+                    <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-md p-3 rounded-2xl border border-[var(--border-default)] shadow-xl flex items-center gap-4 pointer-events-auto">
+                       <div className="flex flex-col">
+                          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Distance</span>
+                          <span className="text-sm font-extrabold text-sos flex items-center gap-1">
+                             <Navigation className="w-3.5 h-3.5" /> {formatDistance(calculateDistance(alert.location_lat, alert.location_lng, currentPos.lat, currentPos.lng))}
+                          </span>
+                       </div>
+                       <div className="w-px h-8 bg-[var(--border-default)]" />
+                       <div className="flex flex-col">
+                          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">ETA</span>
+                          <span className="text-sm font-extrabold text-blue-400">
+                             {formatETA(calculateETA(calculateDistance(alert.location_lat, alert.location_lng, currentPos.lat, currentPos.lng)))}
+                          </span>
+                       </div>
+                       <div className="w-px h-8 bg-[var(--border-default)]" />
+                       <div className="flex flex-col">
+                          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Dir</span>
+                          <span className="text-sm font-extrabold text-orange-400">
+                             {getCompassDirection(currentPos.lat, currentPos.lng, alert.location_lat, alert.location_lng)}
+                          </span>
+                       </div>
+                    </div>
+                    <div className="bg-sos/90 backdrop-blur-md p-3 rounded-2xl border border-sos/20 shadow-xl pointer-events-auto flex items-center gap-2">
+                       <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                       <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live Routing</span>
+                    </div>
                  </div>
-                 <div className="flex items-center gap-2 text-blue-400">
-                    <div className="w-2 h-2 rounded-full bg-blue-400" /> You (Live)
-                 </div>
-              </div>
-           </div>
+               )}
+
+               <div className="absolute bottom-4 right-4 bg-[var(--bg-primary)]/80 backdrop-blur-md p-3 rounded-xl border border-[var(--border-default)] text-[10px] font-bold space-y-2">
+                  <div className="flex items-center gap-2 text-sos">
+                     <div className="w-2 h-2 rounded-full bg-sos" /> Distressed User
+                  </div>
+                  <div className="flex items-center gap-2 text-blue-400">
+                     <div className="w-2 h-2 rounded-full bg-blue-400" /> You (Live)
+                  </div>
+               </div>
+            </div>
 
            {/* User & Mission Details */}
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

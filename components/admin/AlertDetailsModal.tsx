@@ -5,13 +5,16 @@ import { createClient } from '@/lib/supabase/client';
 import { Alert, Profile } from '@/lib/types/app.types';
 import { 
   X, MapPin, User, Shield, Clock, Zap, Navigation, 
-  Phone, Mail, Calendar, Info, Activity, Compass 
+  Phone, Mail, Calendar, Info, Activity, Compass,
+  CheckCircle2 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import { StatusPill } from '../shared/StatusPill';
 import { 
   formatDateTime, formatRelativeTime, getEmergencyIcon, 
-  calculateDistance, formatDistance, getCompassDirection 
+  calculateDistance, formatDistance, getCompassDirection,
+  calculateETA, formatETA
 } from '@/lib/utils/formatters';
 import dynamic from 'next/dynamic';
 
@@ -57,12 +60,33 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: `id=eq.${alertId}` }, (payload) => {
         setAlert((prev: any) => ({ ...prev, ...payload.new }));
       })
+      .on('broadcast', { event: 'location' }, (payload) => {
+        setAlert((prev: any) => ({ 
+          ...prev, 
+          responder_lat: payload.payload.lat, 
+          responder_lng: payload.payload.lng 
+        }));
+      })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [alertId, supabase]);
+
+  const handleResolve = async () => {
+    try {
+      const { error } = await supabase
+        .from('alerts')
+        .update({ status: 'resolved', resolved_at: new Date().toISOString() })
+        .eq('id', alertId);
+
+      if (error) throw error;
+      toast.success('Alert resolved successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to resolve alert');
+    }
+  };
 
   if (!alertId) return null;
 
@@ -120,10 +144,13 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
                  </div>
                  {distance !== null && (
                     <div className="flex flex-col items-end">
-                       <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Responder Distance</div>
+                       <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Responder Info</div>
                        <div className="flex items-center gap-2 text-sos font-extrabold">
                           <Compass className="w-4 h-4" />
                           <span>{formatDistance(distance)} · {direction}</span>
+                       </div>
+                       <div className="text-[10px] font-bold text-blue-400 mt-1 uppercase tracking-widest">
+                          ETA: {formatETA(calculateETA(distance))}
                        </div>
                     </div>
                  )}
@@ -247,6 +274,18 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
                       ID: {alert.id.slice(0, 8)}
                    </div>
                 </div>
+
+                {/* Admin Actions */}
+                {alert.status !== 'resolved' && alert.status !== 'cancelled' && (
+                  <div className="pt-6">
+                    <button 
+                      onClick={handleResolve}
+                      className="w-full py-4 bg-green-500/10 hover:bg-green-500/20 text-green-400 border border-green-500/30 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2"
+                    >
+                      <CheckCircle2 className="w-5 h-5" /> Mark as Resolved
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="text-center py-20 text-[var(--text-muted)] italic">
