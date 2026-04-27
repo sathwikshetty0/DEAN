@@ -30,13 +30,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Check local storage for persisted role
     const savedRole = localStorage.getItem('dean_prototype_role');
     if (savedRole && MOCK_PROFILES[savedRole]) {
-      setProfile(MOCK_PROFILES[savedRole]);
+      const mockProfile = MOCK_PROFILES[savedRole];
+      setProfile(mockProfile);
+      
+      // Ensure cookies are also set for server-side
+      document.cookie = `dean_prototype_user_id=${mockProfile.id}; path=/; max-age=31536000`;
+      document.cookie = `dean_prototype_role=${savedRole}; path=/; max-age=31536000`;
     }
     setLoading(false);
   }, []);
 
   const signOut = async () => {
     localStorage.removeItem('dean_prototype_role');
+    document.cookie = 'dean_prototype_user_id=; path=/; max-age=0';
+    document.cookie = 'dean_prototype_role=; path=/; max-age=0';
     setProfile(null);
     router.push('/');
   };
@@ -46,6 +53,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const mockProfile = MOCK_PROFILES[role];
     setProfile(mockProfile);
     localStorage.setItem('dean_prototype_role', role);
+    
+    // Set cookies for server-side access
+    document.cookie = `dean_prototype_user_id=${mockProfile.id}; path=/; max-age=31536000`;
+    document.cookie = `dean_prototype_role=${role}; path=/; max-age=31536000`;
+
     setLoading(false);
 
     if (role === 'admin') router.push('/admin');

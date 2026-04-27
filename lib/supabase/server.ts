@@ -16,3 +16,14 @@ export const createClient = () => {
     }
   );
 };
+
+// Admin client to bypass RLS for prototypes
+export const createAdminClient = () => {
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {},
+    }
+  );
+};
