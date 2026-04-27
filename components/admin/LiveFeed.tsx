@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface LiveFeedProps {
   logs: Log[];
+  onSelectAlert: (id: string) => void;
 }
 
 const getLogStyle = (action: string) => {
@@ -20,7 +21,7 @@ const getLogStyle = (action: string) => {
   return { bg: 'bg-[var(--bg-tertiary)]', text: 'text-[var(--text-secondary)]', emoji: '📋' };
 };
 
-export const LiveFeed = ({ logs }: LiveFeedProps) => {
+export const LiveFeed = ({ logs, onSelectAlert }: LiveFeedProps) => {
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-3xl overflow-hidden">
       <div className="p-6 border-b border-[var(--border-default)] flex items-center justify-between">
@@ -45,7 +46,11 @@ export const LiveFeed = ({ logs }: LiveFeedProps) => {
                   key={log.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="p-4 flex items-start gap-4 hover:bg-white/[0.02] transition-colors group"
+                  onClick={() => log.alert_id && onSelectAlert(log.alert_id)}
+                  className={clsx(
+                    "p-4 flex items-start gap-4 hover:bg-white/[0.02] transition-colors group",
+                    log.alert_id && "cursor-pointer"
+                  )}
                 >
                   <div className={clsx('w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-bold', style.bg)}>
                     {style.emoji}
@@ -64,9 +69,11 @@ export const LiveFeed = ({ logs }: LiveFeedProps) => {
                       {log.routing_mode ? ` · ${log.routing_mode.toUpperCase()}` : ''}
                     </p>
                   </div>
-                  <button className="opacity-0 group-hover:opacity-100 p-2 text-[var(--text-muted)] hover:text-[var(--red-sos)] transition-all">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+                  {log.alert_id && (
+                    <button className="opacity-0 group-hover:opacity-100 p-2 text-[var(--text-muted)] hover:text-[var(--red-sos)] transition-all">
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  )}
                 </motion.div>
               );
             })

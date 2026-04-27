@@ -7,6 +7,7 @@ import { Alert } from '@/lib/types/app.types';
 import { Search, Filter, Download, ExternalLink, MapPin, Zap, Navigation } from 'lucide-react';
 import { clsx } from 'clsx';
 import { toast } from 'react-hot-toast';
+import { AlertDetailsModal } from '@/components/admin/AlertDetailsModal';
 
 export default function AdminAlerts() {
   const supabase = createClient();
@@ -14,6 +15,7 @@ export default function AdminAlerts() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAlerts();
@@ -169,7 +171,10 @@ export default function AdminAlerts() {
                            <div className="text-[10px] text-[var(--text-muted)]">{new Date(alert.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                         </td>
                         <td className="px-6 py-4">
-                           <button className="p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-sos hover:border-sos/30 transition-all">
+                           <button 
+                             onClick={() => setSelectedAlertId(alert.id)}
+                             className="p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-sos hover:border-sos/30 transition-all"
+                           >
                               <ExternalLink className="w-4 h-4" />
                            </button>
                         </td>
@@ -180,6 +185,7 @@ export default function AdminAlerts() {
             </table>
          </div>
       </div>
+      <AlertDetailsModal alertId={selectedAlertId} onClose={() => setSelectedAlertId(null)} />
     </div>
   );
 }

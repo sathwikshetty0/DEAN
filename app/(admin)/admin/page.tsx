@@ -6,6 +6,10 @@ import { useAdminStream } from '@/hooks/useSupabaseRealtime';
 import { StatsCard } from '@/components/admin/StatsCard';
 import { LiveFeed } from '@/components/admin/LiveFeed';
 import { SystemStatusBar } from '@/components/admin/SystemStatusBar';
+import { AlertDetailsModal } from '@/components/admin/AlertDetailsModal';
+import dynamic from 'next/dynamic';
+
+const CommandCenterMap = dynamic(() => import('@/components/admin/CommandCenterMap').then(m => m.CommandCenterMap), { ssr: false });
 import { Log } from '@/lib/types/app.types';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -20,6 +24,7 @@ export default function AdminOverview() {
   const supabase = createClient();
   const [stats, setStats] = useState({ activeAlerts: 0, resolvedToday: 0, onlineResponders: 0, p2pEvents: 0 });
   const [logs, setLogs] = useState<Log[]>([]);
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
 
   const [chartData] = useState([
     { name: 'Mon', count: 12 }, { name: 'Tue', count: 18 }, { name: 'Wed', count: 15 },
@@ -76,6 +81,14 @@ export default function AdminOverview() {
     <div className="space-y-8">
       {/* System Status */}
       <SystemStatusBar />
+
+      {/* TACTICAL MAP - NEW FEATURE */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-extrabold font-syne flex items-center gap-2">
+          <Shield className="w-5 h-5 text-blue-500" /> Tactical Command Center
+        </h3>
+        <CommandCenterMap />
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -164,7 +177,7 @@ export default function AdminOverview() {
       {/* Live Feed & Health */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <LiveFeed logs={logs} />
+          <LiveFeed logs={logs} onSelectAlert={setSelectedAlertId} />
         </div>
 
         {/* System Health */}
@@ -203,6 +216,7 @@ export default function AdminOverview() {
           </div>
         </div>
       </div>
+      <AlertDetailsModal alertId={selectedAlertId} onClose={() => setSelectedAlertId(null)} />
     </div>
   );
 }
