@@ -3,10 +3,14 @@ import { createClient, createAdminClient } from './supabase/server';
 
 export async function getAuthenticatedUser() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (user) {
-    return { user, isPrototype: false, supabase };
+  
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      return { user, isPrototype: false, supabase };
+    }
+  } catch (e) {
+    console.error('Auth error:', e);
   }
 
   // Prototype fallback
@@ -14,15 +18,17 @@ export async function getAuthenticatedUser() {
   const protoId = cookieStore.get('dean_prototype_user_id')?.value;
   const protoRole = cookieStore.get('dean_prototype_role')?.value;
 
-  if (protoId) {
+  // Validate that protoId is a valid UUID
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  
+  if (protoId && uuidRegex.test(protoId)) {
     const mockUser = {
       id: protoId,
-      email: `${protoRole}@dean.com`,
-      user_metadata: { role: protoRole }
+      email: `${protoRole || 'user'}@dean.com`,
+      user_metadata: { role: protoRole || 'user' },
+      app_metadata: { role: protoRole || 'user' }
     };
     
-    // For prototype users, we use the admin client to bypass RLS
-    // since they aren't real auth.users
     return { 
       user: mockUser as any, 
       isPrototype: true, 
