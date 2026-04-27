@@ -5,12 +5,13 @@ export async function getAuthenticatedUser() {
   const supabase = createClient();
   
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      return { user, isPrototype: false, supabase };
+    const { data, error } = await supabase.auth.getUser();
+    if (data?.user && !error) {
+      return { user: data.user, isPrototype: false, supabase };
     }
   } catch (e) {
-    console.error('Auth error:', e);
+    // Malformed cookies can cause getUser to throw
+    console.error('Supabase Auth error:', e);
   }
 
   // Prototype fallback
