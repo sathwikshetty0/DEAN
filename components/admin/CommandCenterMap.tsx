@@ -9,6 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Shield, AlertCircle, User, Zap, Navigation as NavIcon } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Fix for default markers
 const DefaultIcon = L.icon({
@@ -54,26 +55,33 @@ export const CommandCenterMap = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [responders, setResponders] = useState<Profile[]>([]);
   const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Bangalore default
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: alertData } = await supabase
-        .from('alerts')
-        .select('*')
-        .in('status', ['pending', 'accepted', 'en_route']);
-      
-      const { data: respData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('role', 'responder')
-        .eq('is_active', true);
+      try {
+        const { data: alertData } = await supabase
+          .from('alerts')
+          .select('*')
+          .in('status', ['pending', 'accepted', 'en_route']);
+        
+        const { data: respData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'responder')
+          .eq('is_active', true);
 
-      if (alertData) setAlerts(alertData);
-      if (respData) setResponders(respData);
+        if (alertData) setAlerts(alertData);
+        if (respData) setResponders(respData);
 
-      // Center map on first alert if available
-      if (alertData && alertData.length > 0) {
-        setCenter([alertData[0].location_lat, alertData[0].location_lng]);
+        // Center map on first alert if available
+        if (alertData && alertData.length > 0) {
+          setCenter([alertData[0].location_lat, alertData[0].location_lng]);
+        }
+      } catch (error) {
+        console.error('Error fetching map data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -98,6 +106,22 @@ export const CommandCenterMap = () => {
 
   return (
     <div className="h-[500px] w-full rounded-[2.5rem] overflow-hidden border border-[var(--border-default)] shadow-2xl relative">
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[2000] bg-[var(--bg-secondary)] flex flex-col items-center justify-center gap-4"
+          >
+            <div className="relative">
+               <div className="w-12 h-12 border-4 border-sos/20 border-t-sos rounded-full animate-spin" />
+               <Zap className="w-5 h-5 text-sos absolute inset-0 m-auto animate-pulse" />
+            </div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-sos">Initializing Command Center</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <MapContainer 
         center={center} 
         zoom={13} 
