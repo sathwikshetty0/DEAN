@@ -89,3 +89,30 @@ Leaflet often conflicts with React's re-rendering (especially with HMR), leading
 
 ## 9. Conclusion
 D-EAN is more than a dashboard; it is a blueprint for resilient community infrastructure. By combining the power of the modern Cloud with the resilience of P2P networking, we ensure that help is never more than a broadcast away.
+
+---
+
+## 10. Premium Component Suite
+
+To ensure a "Mission-Critical" feel, we implemented a suite of premium components:
+
+- **SOSButton (Hold-to-Confirm)**: Prevents accidental triggers by requiring a 1.5s hold, accompanied by a SVG progress ring and haptic feedback.
+- **NetworkStatus Monitor**: Real-time tracking of internet connectivity with automatic fallback notifications to "P2P Mesh Mode."
+- **GlobalLoader & LoadingDots**: Consistent, high-fidelity loading states using Framer Motion for a fluid user experience.
+- **AlertTimeline (Live)**: An interactive, animated ledger of emergency progress with pulsing "Active" indicators.
+- **Premium Map Markers**: SVG-based markers with status-aware colors and pulse animations for high-priority alerts.
+- **Glassmorphism UI**: Custom CSS utilities for backdrop-blur effects and sophisticated dark-mode gradients.
+
+---
+
+## 11. Design Philosophy: "Urgency meets Elegance"
+
+D-EAN's UI is designed with three principles:
+1. **High Contrast**: Using deep blacks (#0A0E1A) and vibrant SOS reds (#FF2D55) to ensure readability in stressful situations.
+2. **Physical Feedback**: Integrating the Vibration API (Haptics) and Framer Motion spring physics to make digital actions feel "real."
+3. **Information Density**: Using custom Badges and StatusPills to convey complex metadata (routing mode, emergency type, distance) at a single glance.
+
+---
+
+## 12. Final Thoughts
+With the latest improvements in UX and real-time synchronization, D-EAN stands as a production-grade demonstration of decentralized emergency response.
