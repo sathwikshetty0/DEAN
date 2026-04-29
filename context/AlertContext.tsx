@@ -29,23 +29,57 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error } = await supabase
         .from('alerts')
         .select('*')
-        .eq('triggered_by', user.id)
+        .eq('user_id', user.id) // Corrected from triggered_by to match schema in README
         .in('status', ['pending', 'accepted', 'en_route'])
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      if (!error && data) {
+      if (!error) {
         setActiveAlert(data);
       }
       setLoading(false);
     };
 
     fetchActiveAlert();
+
+    // Subscribe to changes for this user's alerts
+    if (user) {
+      const channel = supabase
+        .channel(`user-alerts-${user.id}`)
+        .on(
+          'postgres_changes',
+          { 
+            event: '*', 
+            schema: 'public', 
+            table: 'alerts',
+            filter: `user_id=eq.${user.id}`
+          },
+          (payload) => {
+            const newAlert = payload.new as Alert;
+            if (['pending', 'accepted', 'en_route'].includes(newAlert.status)) {
+              setActiveAlert(newAlert);
+            } else {
+              setActiveAlert(null);
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [user, supabase]);
 
+  const value = React.useMemo(() => ({
+    activeAlert,
+    setActiveAlert,
+    loading
+  }), [activeAlert, loading]);
+
   return (
-    <AlertContext.Provider value={{ activeAlert, setActiveAlert, loading }}>
+    <AlertContext.Provider value={value}>
       {children}
     </AlertContext.Provider>
   );
