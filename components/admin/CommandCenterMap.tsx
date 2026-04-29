@@ -20,21 +20,38 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const createCustomIcon = (emoji: string, color: string) => {
+const createCustomIcon = (type: string, status: string) => {
+  const color = status === 'pending' ? '#FF2D55' : '#F59E0B';
+  const isPending = status === 'pending';
+  
   return L.divIcon({
-    html: `<div style="background-color: ${color}; width: 40px; height: 40px; border-radius: 12px; display: flex; items-center; justify-content: center; font-size: 20px; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: rotate(45deg);"><div style="transform: rotate(-45deg);">${emoji}</div></div>`,
+    html: `
+      <div class="relative flex items-center justify-center">
+        ${isPending ? `<div class="absolute w-12 h-12 bg-${status === 'pending' ? 'red' : 'orange'}-500/20 rounded-full animate-ping"></div>` : ''}
+        <div style="background-color: ${color}; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 3px solid #121212; box-shadow: 0 8px 16px rgba(0,0,0,0.4); transform: rotate(45deg);">
+          <div style="transform: rotate(-45deg); color: white; font-weight: bold;">
+            ${type === 'medical' ? '🏥' : type === 'fire' ? '🔥' : '🚨'}
+          </div>
+        </div>
+      </div>
+    `,
     className: 'custom-marker',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [44, 44],
+    iconAnchor: [22, 44],
   });
 };
 
-const createResponderIcon = (color: string) => {
+const createResponderIcon = (isAvailable: boolean) => {
+  const color = isAvailable ? '#10B981' : '#3B82F6';
   return L.divIcon({
-    html: `<div style="background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; display: flex; items-center; justify-content: center; font-size: 16px; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">🦺</div>`,
+    html: `
+      <div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #121212; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+        <div style="color: white; font-size: 14px;">🦺</div>
+      </div>
+    `,
     className: 'responder-marker',
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
   });
 };
 
@@ -138,10 +155,7 @@ export const CommandCenterMap = () => {
           <Marker 
             key={alert.id} 
             position={[alert.location_lat, alert.location_lng]}
-            icon={createCustomIcon(
-              alert.emergency_type === 'medical' ? '🏥' : alert.emergency_type === 'fire' ? '🔥' : '🚨',
-              alert.status === 'pending' ? '#FF2D55' : '#F59E0B'
-            )}
+            icon={createCustomIcon(alert.emergency_type, alert.status)}
           >
             <Popup className="custom-popup">
                <div className="p-2 min-w-[150px]">
@@ -161,7 +175,7 @@ export const CommandCenterMap = () => {
             <Marker 
               key={resp.id} 
               position={[resp.location_lat, resp.location_lng]}
-              icon={createResponderIcon(resp.is_available ? '#10B981' : '#3B82F6')}
+              icon={createResponderIcon(resp.is_available)}
             >
               <Popup>
                  <div className="p-1">
