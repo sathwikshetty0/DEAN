@@ -1,24 +1,42 @@
-const QUEUE_KEY = 'dean-offline-queue';
+export const storage = {
+  get: <T>(key: string, defaultValue: T): T => {
+    if (typeof window === 'undefined') return defaultValue;
+    try {
+      const item = localStorage.getItem(`dean-${key}`);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+      console.error(`Storage Error (get ${key}):`, error);
+      return defaultValue;
+    }
+  },
+  
+  set: <T>(key: string, value: T): void => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(`dean-${key}`, JSON.stringify(value));
+    } catch (error) {
+      console.error(`Storage Error (set ${key}):`, error);
+    }
+  },
 
-export const getOfflineQueue = (): any[] => {
-  if (typeof window === 'undefined') return [];
-  try {
-    return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-  } catch {
-    return [];
+  remove: (key: string): void => {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(`dean-${key}`);
   }
 };
 
-export const addToQueue = (item: any): void => {
-  if (typeof window === 'undefined') return;
-  const queue = getOfflineQueue();
-  queue.push({ ...item, queued_at: Date.now() });
-  localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+export const getOfflineQueue = <T = any>(): T[] => {
+  return storage.get<T[]>('offline-queue', []);
+};
+
+export const addToQueue = <T = any>(item: T): void => {
+  const queue = getOfflineQueue<T>();
+  queue.push({ ...item, queued_at: Date.now() } as any);
+  storage.set('offline-queue', queue);
 };
 
 export const clearQueue = (): void => {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(QUEUE_KEY);
+  storage.remove('offline-queue');
 };
 
 export const getQueueLength = (): number => {
