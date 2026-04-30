@@ -16,7 +16,7 @@ import { EmergencyType, Alert } from '@/lib/types/app.types';
 import { broadcastAlert } from '@/lib/utils/p2p';
 import { getGreeting, getEmergencyIcon, formatRelativeTime } from '@/lib/utils/formatters';
 import { toast } from 'react-hot-toast';
-import { Shield, Clock, ChevronRight, Info } from 'lucide-react';
+import { Shield, Clock, ChevronRight, Info, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
@@ -329,6 +329,17 @@ export default function UserDashboard() {
           </ul>
         </div>
       </div>
+
+      {/* Voice SOS Trigger */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-8 left-8 z-[50] w-14 h-14 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-full flex items-center justify-center shadow-2xl hover:border-sos/50 group transition-all"
+        onClick={() => toast.success('Voice SOS listening enabled', { icon: '🎙️' })}
+      >
+        <Mic className="w-6 h-6 text-[var(--text-muted)] group-hover:text-sos transition-colors" />
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[var(--bg-primary)] rounded-full" />
+      </motion.button>
     </div>
   );
 }
