@@ -63,14 +63,16 @@ const createResponderIcon = (isAvailable: boolean) => {
 };
 
 interface MapUpdaterProps {
-  center: [number, number];
+  bounds?: L.LatLngBoundsExpression;
 }
 
-const MapUpdater = ({ center }: MapUpdaterProps) => {
+const MapUpdater = ({ bounds }: MapUpdaterProps) => {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, map.getZoom());
-  }, [center, map]);
+    if (bounds) {
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+    }
+  }, [bounds, map]);
   return null;
 };
 
@@ -78,7 +80,7 @@ export const CommandCenterMap = () => {
   const supabase = createClient();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [responders, setResponders] = useState<Profile[]>([]);
-  const [center, setCenter] = useState<[number, number]>([12.9716, 77.5946]); // Bangalore default
+  const [bounds, setBounds] = useState<L.LatLngBoundsExpression | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -98,9 +100,16 @@ export const CommandCenterMap = () => {
         if (alertData) setAlerts(alertData);
         if (respData) setResponders(respData);
 
-        // Center map on first alert if available
-        if (alertData && alertData.length > 0) {
-          setCenter([alertData[0].location_lat, alertData[0].location_lng]);
+        // Calculate bounds
+        const points: [number, number][] = [];
+        alertData?.forEach(a => points.push([a.location_lat, a.location_lng]));
+        respData?.filter(r => r.location_lat && r.location_lng).forEach(r => points.push([r.location_lat!, r.location_lng!]));
+
+        if (points.length > 0) {
+          const latLngs = points.map(p => L.latLng(p[0], p[1]));
+          setBounds(L.latLngBounds(latLngs));
+        } else {
+          setBounds([[12.9716, 77.5946], [12.9716, 77.5946]]); // Default Bangalore
         }
       } catch (error) {
         console.error('Error fetching map data:', error);
@@ -147,7 +156,7 @@ export const CommandCenterMap = () => {
       </AnimatePresence>
 
       <MapContainer 
-        center={center} 
+        bounds={bounds || [[12.9716, 77.5946], [12.9716, 77.5946]]}
         zoom={13} 
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
@@ -156,7 +165,7 @@ export const CommandCenterMap = () => {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        <MapUpdater center={center} />
+        <MapUpdater bounds={bounds} />
 
         {alerts.map((alert) => (
           <Marker 
@@ -214,10 +223,20 @@ export const CommandCenterMap = () => {
       {/* Map Actions */}
       <div className="absolute bottom-6 right-6 z-[1000] flex flex-col gap-2">
          <button 
-           onClick={() => setCenter([12.9716, 77.5946])}
-           className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-[var(--text-muted)] hover:text-sos shadow-xl transition-all"
+           onClick={() => {
+              const points: [number, number][] = [];
+              alerts.forEach(a => points.push([a.location_lat, a.location_lng]));
+              responders.filter(r => r.location_lat && r.location_lng).forEach(r => points.push([r.location_lat!, r.location_lng!]));
+              if (points.length > 0) {
+                 setBounds(L.latLngBounds(points.map(p => L.latLng(p[0], p[1]))));
+              } else {
+                 setBounds([[12.9716, 77.5946], [12.9716, 77.5946]]);
+              }
+           }}
+           className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-[var(--text-muted)] hover:text-sos shadow-xl transition-all group"
+           title="Fit to markers"
          >
-            <NavIcon className="w-5 h-5" />
+            <NavIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
          </button>
       </div>
     </div>
