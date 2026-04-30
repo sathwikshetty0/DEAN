@@ -27,17 +27,21 @@ const createCustomIcon = (type: string, status: string) => {
   return L.divIcon({
     html: `
       <div class="relative flex items-center justify-center">
-        ${isPending ? `<div class="absolute w-12 h-12 bg-${status === 'pending' ? 'red' : 'orange'}-500/20 rounded-full animate-ping"></div>` : ''}
-        <div style="background-color: ${color}; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 3px solid #121212; box-shadow: 0 8px 16px rgba(0,0,0,0.4); transform: rotate(45deg);">
-          <div style="transform: rotate(-45deg); color: white; font-weight: bold;">
-            ${type === 'medical' ? '🏥' : type === 'fire' ? '🔥' : '🚨'}
+        ${isPending ? `
+          <div class="absolute w-12 h-12 bg-[#FF2D55]/30 rounded-full animate-ping opacity-75"></div>
+          <div class="absolute w-8 h-8 bg-[#FF2D55]/40 rounded-full animate-pulse"></div>
+        ` : ''}
+        <div class="relative z-10" style="background-color: ${color}; width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); transform: rotate(45deg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+          <div style="transform: rotate(-45deg); color: white; font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+            ${type === 'medical' ? '🏥' : type === 'fire' ? '🔥' : type === 'accident' ? '🚗' : '🚨'}
           </div>
         </div>
+        <div class="absolute -bottom-1 w-2 h-2 bg-[#0A0E1A] rotate-45"></div>
       </div>
     `,
     className: 'custom-marker',
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
+    iconSize: [48, 48],
+    iconAnchor: [24, 48],
   });
 };
 
@@ -45,13 +49,16 @@ const createResponderIcon = (isAvailable: boolean) => {
   const color = isAvailable ? '#10B981' : '#3B82F6';
   return L.divIcon({
     html: `
-      <div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #121212; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-        <div style="color: white; font-size: 14px;">🦺</div>
+      <div class="relative flex items-center justify-center">
+        <div style="background-color: ${color}; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 6px 15px -3px rgba(0,0,0,0.4); transition: all 0.3s ease;">
+          <div style="font-size: 16px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">🦺</div>
+        </div>
+        ${isAvailable ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-[#10B981] border-2 border-[#0A0E1A] rounded-full"></div>' : ''}
       </div>
     `,
     className: 'responder-marker',
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
+    iconSize: [38, 38],
+    iconAnchor: [19, 19],
   });
 };
 
