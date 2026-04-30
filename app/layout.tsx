@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { NetworkProvider } from "@/context/NetworkContext";
 import { AlertProvider } from "@/context/AlertContext";
 import { OfflineBanner } from "@/components/shared/OfflineBanner";
+import { PWARegistration } from "@/components/shared/PWARegistration";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
         className={`${syne.variable} ${dmSans.variable} font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased`}
       >
         <NetworkProvider>
+          <PWARegistration />
           <AuthProvider>
             <AlertProvider>
               <OfflineBanner />
