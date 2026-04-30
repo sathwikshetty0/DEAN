@@ -157,6 +157,32 @@ export default function UserDashboard() {
     }
   };
 
+  // Shake to SOS Detection
+  useEffect(() => {
+    let lastX: number, lastY: number, lastZ: number;
+    let threshold = 15; // adjust as needed
+    
+    const handleMotion = (e: DeviceMotionEvent) => {
+      const acc = e.accelerationIncludingGravity;
+      if (!acc) return;
+      
+      const { x, y, z } = acc;
+      if (lastX !== undefined) {
+        const delta = Math.abs(x! - lastX) + Math.abs(y! - lastY) + Math.abs(z! - lastZ);
+        if (delta > threshold && !sending && !activeAlert) {
+           toast.success('Shake detected! Hold SOS to confirm.', { icon: '📳' });
+           // Could auto-trigger after a countdown here
+        }
+      }
+      lastX = x!; lastY = y!; lastZ = z!;
+    };
+
+    if (typeof window !== 'undefined' && 'DeviceMotionEvent' in window) {
+      window.addEventListener('devicemotion', handleMotion);
+    }
+    return () => window.removeEventListener('devicemotion', handleMotion);
+  }, [sending, activeAlert]);
+
   const handleCancel = async () => {
     if (!activeAlert || activeAlert.id === 'local-temp') {
       setActiveAlert(null);
