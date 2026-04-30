@@ -30,3 +30,14 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-alerts') {
+    event.waitUntil(syncAlerts());
+  }
+});
+
+async function syncAlerts() {
+  console.log('Background Sync: Synchronizing alerts...');
+  // Logic to read from IndexedDB and send to API
+}
