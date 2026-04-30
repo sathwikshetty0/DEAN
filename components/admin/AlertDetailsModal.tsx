@@ -6,7 +6,7 @@ import { Alert, Profile } from '@/lib/types/app.types';
 import { 
   X, MapPin, User, Shield, Clock, Zap, Navigation, 
   Phone, Mail, Calendar, Info, Activity, Compass,
-  CheckCircle2 
+  CheckCircle2, Copy 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
@@ -86,6 +86,11 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
     } catch (err: any) {
       toast.error(err.message || 'Failed to resolve alert');
     }
+  };
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(alert.id);
+    toast.success('Alert ID copied to clipboard');
   };
 
   if (!alertId) return null;
@@ -269,10 +274,15 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
                       {alert.routing_mode === 'cloud' ? <Zap className="w-3 h-3 text-blue-400" /> : <Navigation className="w-3 h-3 text-orange-400" />}
                       {alert.routing_mode} Network
                    </div>
-                   <div className="flex items-center gap-1.5">
-                      <Clock className="w-3 h-3" />
-                      ID: {alert.id.slice(0, 8)}
-                   </div>
+                    <button 
+                      onClick={handleCopyId}
+                      className="flex items-center gap-1.5 hover:text-[var(--text-secondary)] transition-colors group"
+                      title="Copy full ID"
+                    >
+                       <Clock className="w-3 h-3" />
+                       ID: {alert.id.slice(0, 8)}...
+                       <Copy className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
                 </div>
 
                 {/* Admin Actions */}
