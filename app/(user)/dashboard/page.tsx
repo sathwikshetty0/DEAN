@@ -93,10 +93,32 @@ export default function UserDashboard() {
 
     setSending(true);
 
+    let finalType = selectedType;
+
+    // AI Triage Pre-processing
+    if (description && mode !== 'p2p') {
+      try {
+        const triageRes = await fetch('/api/triage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description, originalType: selectedType }),
+        });
+        const triageData = await triageRes.json();
+        if (triageData.suggestedType && triageData.confidence > 0.8) {
+          finalType = triageData.suggestedType;
+          if (triageData.isOverridden) {
+            toast.success(`AI refined alert to: ${finalType.toUpperCase()}`, { icon: '🤖' });
+          }
+        }
+      } catch (e) {
+        console.error('Triage failed, using original type');
+      }
+    }
+
     const alertData = {
       location_lat: position.lat,
       location_lng: position.lng,
-      emergency_type: selectedType,
+      emergency_type: finalType,
       description,
       routing_mode: mode,
     };
