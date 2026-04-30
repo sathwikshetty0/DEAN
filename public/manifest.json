@@ -1,0 +1,23 @@
+{
+  "name": "D-EAN | Decentralized Emergency Network",
+  "short_name": "D-EAN",
+  "description": "Resilient community-driven emergency coordination platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0E1A",
+  "theme_color": "#FF2D55",
+  "icons": [
+    {
+      "src": "/next.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/next.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
