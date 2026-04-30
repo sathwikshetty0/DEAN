@@ -50,6 +50,9 @@ const createResponderIcon = (isAvailable: boolean) => {
   return L.divIcon({
     html: `
       <div class="relative flex items-center justify-center">
+        ${isAvailable ? `
+          <div class="absolute w-10 h-10 bg-[#10B981]/20 rounded-full animate-ping"></div>
+        ` : ''}
         <div style="background-color: ${color}; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 6px 15px -3px rgba(0,0,0,0.4); transition: all 0.3s ease;">
           <div style="font-size: 16px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">🦺</div>
         </div>
