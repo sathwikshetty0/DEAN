@@ -23,6 +23,11 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
     setIsHolding(true);
     setProgress(0);
     
+    // Initial tactile feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(20);
+    }
+    
     holdTimer.current = setTimeout(() => {
       handleSOS();
       endHold();
