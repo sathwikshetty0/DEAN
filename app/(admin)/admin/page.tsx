@@ -93,6 +93,19 @@ export default function AdminOverview() {
     downloadCSV(csv, `dean-alerts-${new Date().toISOString().split('T')[0]}.csv`);
   };
 
+  const handleExportLogs = async () => {
+    const { data: logsData } = await supabase.from('logs').select('*').limit(200);
+    if (!logsData || logsData.length === 0) return;
+    
+    const headers = ['ID', 'Level', 'Message', 'Source', 'Timestamp'];
+    const rows = logsData.map(l => [
+      l.id, l.level, l.message, l.source, l.created_at
+    ]);
+    
+    const csv = generateCSV(headers, rows);
+    downloadCSV(csv, `dean-logs-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
   return (
     <div className="space-y-8">
       {/* System Status */}
@@ -104,12 +117,20 @@ export default function AdminOverview() {
           <h3 className="text-xl font-extrabold font-syne flex items-center gap-2">
             <Shield className="w-5 h-5 text-blue-500" /> Tactical Command Center
           </h3>
-          <button 
-            onClick={handleExport}
-            className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-xs font-bold hover:bg-[var(--bg-tertiary)] transition-colors"
-          >
-            <Download className="w-4 h-4" /> Export Report
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={handleExportLogs}
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-[10px] font-bold hover:bg-[var(--bg-tertiary)] transition-colors opacity-70 hover:opacity-100"
+            >
+              <Download className="w-3.5 h-3.5" /> Logs
+            </button>
+            <button 
+              onClick={handleExport}
+              className="flex items-center gap-2 px-4 py-2 bg-sos/10 border border-sos/20 rounded-xl text-[10px] font-bold text-sos hover:bg-sos/20 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" /> Alerts
+            </button>
+          </div>
         </div>
         <CommandCenterMap />
       </div>
