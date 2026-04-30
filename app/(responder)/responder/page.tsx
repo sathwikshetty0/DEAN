@@ -9,7 +9,7 @@ import { Alert, Profile } from '@/lib/types/app.types';
 import { StatusPill } from '@/components/shared/StatusPill';
 import { AlertMap } from '@/components/alert/AlertMap';
 import { toast } from 'react-hot-toast';
-import { Activity, Shield, MapPin, Clock, Check, X, Navigation, Award, Zap } from 'lucide-react';
+import { Activity, Shield, MapPin, Clock, Check, X, Navigation, Award, Zap, Volume2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import { useRouter } from 'next/navigation';
@@ -108,24 +108,38 @@ export default function ResponderDashboard() {
              <h2 className="text-xl font-extrabold font-syne">Availability Status</h2>
              <p className="text-xs text-[var(--text-secondary)]">Toggle to receive emergency alerts in your zone.</p>
            </div>
-        </div>
+         </div>
 
-        <button 
-          onClick={toggleAvailability}
-          className={clsx(
-            "px-8 py-3 rounded-full font-bold text-sm transition-all flex items-center gap-2",
-            isAvailable 
-              ? "bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20" 
-              : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-default)] hover:bg-[var(--bg-elevated)]"
-          )}
-        >
-          {isAvailable ? (
-            <><Check className="w-4 h-4" /> ⚡ AVAILABLE</>
-          ) : (
-            <><Activity className="w-4 h-4" /> ⏸ UNAVAILABLE</>
-          )}
-        </button>
-      </div>
+         <div className="flex items-center gap-4">
+           <button 
+             onClick={() => {
+               const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+               audio.play();
+               toast.success('Test tone playing...');
+             }}
+             className="p-3 rounded-xl bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-sos transition-colors"
+             title="Test Emergency Tone"
+           >
+             <Volume2 className="w-5 h-5" />
+           </button>
+
+           <button 
+             onClick={toggleAvailability}
+             className={clsx(
+               "px-8 py-3 rounded-full font-bold text-sm transition-all flex items-center gap-2",
+               isAvailable 
+                 ? "bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20" 
+                 : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-default)] hover:bg-[var(--bg-elevated)]"
+             )}
+           >
+             {isAvailable ? (
+               <><Check className="w-4 h-4" /> ⚡ AVAILABLE</>
+             ) : (
+               <><Activity className="w-4 h-4" /> ⏸ UNAVAILABLE</>
+             )}
+           </button>
+         </div>
+       </div>
 
       {/* Stats Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
