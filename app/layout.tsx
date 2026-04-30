@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   title: "D-EAN | Decentralized Emergency Assistance Network",
   description:
     "Whether the internet works or not — your SOS always gets through. Community-driven emergency coordination platform for Mangaluru.",
+  manifest: "/manifest.json",
+  themeColor: "#FF2D55",
 };
 
 export default function RootLayout({
