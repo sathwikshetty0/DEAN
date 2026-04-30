@@ -32,7 +32,7 @@ export const NetworkStatus = () => {
 
   return (
     <>
-      <div className="fixed top-6 right-6 z-[50] flex items-center gap-3 px-4 py-2 bg-[#121212]/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl">
+      <div className={`fixed top-6 right-6 z-[50] flex items-center gap-3 px-4 py-2 bg-[#0A0E1A]/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl transition-all duration-500 ${!isOnline ? 'border-amber-500/50 shadow-amber-500/10' : ''}`}>
         <div className="relative">
           {isOnline ? (
             <Globe className="w-4 h-4 text-blue-500" />
@@ -47,10 +47,17 @@ export const NetworkStatus = () => {
         </div>
         <div className="flex flex-col">
           <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Network Mode</span>
-          <span className={`text-[10px] font-bold uppercase ${isOnline ? 'text-blue-400' : 'text-amber-400'}`}>
+          <span className={`text-[10px] font-bold uppercase transition-colors duration-500 ${isOnline ? 'text-blue-400' : 'text-amber-400'}`}>
             {isOnline ? 'Cloud Active' : 'P2P Mesh Only'}
           </span>
         </div>
+        {!isOnline && (
+          <motion.div 
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1, repeat: Infinity }}
+            className="w-1.5 h-1.5 rounded-full bg-amber-500"
+          />
+        )}
       </div>
 
       <AnimatePresence>
