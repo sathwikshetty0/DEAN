@@ -343,6 +343,9 @@ export default function UserDashboard() {
                       <div className="text-[10px] text-[var(--text-muted)]">
                         {r.skills.slice(0, 2).join(' · ')} {r.zone ? `• ${r.zone}` : ''}
                       </div>
+                      <div className="text-[8px] uppercase tracking-tighter text-[var(--text-muted)] mt-1">
+                        Last Active: {formatRelativeTime(new Date().toISOString())}
+                      </div>
                     </div>
                   </div>
                   <div className="w-2 h-2 rounded-full bg-[var(--green-safe)] shadow-[0_0_8px_var(--green-safe)]" />
