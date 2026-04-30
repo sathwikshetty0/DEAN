@@ -116,3 +116,11 @@ export const formatETA = (mins: number): string => {
   }
   return `${mins} mins`;
 };
+
+export const identifyZone = (lat: number, lng: number): string => {
+  // Simple mock zone detection for Mangaluru
+  if (lat > 12.87 && lat < 12.92 && lng > 74.83 && lng < 74.88) return 'Mangaluru Central';
+  if (lat >= 12.92) return 'Surathkal / North';
+  if (lat <= 12.87) return 'Ullal / South';
+  return 'Coastal Zone';
+};
