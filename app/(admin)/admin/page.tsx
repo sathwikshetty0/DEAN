@@ -242,7 +242,12 @@ export default function AdminOverview() {
 
         {/* System Health */}
         <div className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-3xl p-8 space-y-8">
-          <h3 className="text-xl font-extrabold font-syne">System Health</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-extrabold font-syne">System Health</h3>
+            <div className={`px-3 py-1 rounded-full text-[10px] font-black border ${stats.activeAlerts > 5 ? 'bg-sos/10 text-sos border-sos/20 animate-pulse' : 'bg-green-500/10 text-green-500 border-green-500/20'}`}>
+              THREAT LEVEL: {stats.activeAlerts > 5 ? 'CRITICAL' : stats.activeAlerts > 2 ? 'ELEVATED' : 'STABLE'}
+            </div>
+          </div>
           <div className="space-y-6">
             {[
               { label: 'Real-time Gateway', val: '100%', ok: true },
