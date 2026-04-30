@@ -14,7 +14,7 @@ import { AlertStatusDisplay } from '@/components/alert/AlertStatus';
 import { StatusPill } from '@/components/shared/StatusPill';
 import { EmergencyType, Alert } from '@/lib/types/app.types';
 import { broadcastAlert } from '@/lib/utils/p2p';
-import { getGreeting, getEmergencyIcon, formatRelativeTime } from '@/lib/utils/formatters';
+import { getGreeting, getEmergencyIcon, formatRelativeTime, identifyZone } from '@/lib/utils/formatters';
 import { toast } from 'react-hot-toast';
 import { Shield, Clock, ChevronRight, Info, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -191,9 +191,20 @@ export default function UserDashboard() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Content */}
       <div className="lg:col-span-2 space-y-8">
-        <header>
-          <h1 className="text-3xl font-extrabold font-syne">{getGreeting()}, {profile?.name?.split(' ')[0]}</h1>
-          <p className="text-[var(--text-secondary)]">Stay safe. The network is watching over you.</p>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-extrabold font-syne">{getGreeting()}, {profile?.name?.split(' ')[0]}</h1>
+            <p className="text-[var(--text-secondary)]">Stay safe. The network is watching over you.</p>
+          </div>
+          {position && (
+            <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
+              <Shield className="w-4 h-4 text-blue-400" />
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase tracking-widest text-blue-400/60">Safety Zone</span>
+                <span className="text-xs font-bold text-blue-400">{identifyZone(position.lat, position.lng)}</span>
+              </div>
+            </div>
+          )}
         </header>
 
         <AnimatePresence mode="wait">
