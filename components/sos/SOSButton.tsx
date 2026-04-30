@@ -94,10 +94,13 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
         )}
       >
         {/* Ripple Effect Background */}
-        {!loading && !isHolding && (
+        {!loading && (
           <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            animate={isHolding ? 
+              { scale: [1, 1.4, 1], opacity: [0.2, 0.4, 0.2] } : 
+              { scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }
+            }
+            transition={{ duration: isHolding ? 0.5 : 2, repeat: Infinity }}
             className="absolute inset-0 bg-white"
           />
         )}
