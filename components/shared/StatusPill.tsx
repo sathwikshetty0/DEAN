@@ -18,25 +18,26 @@ import { motion } from 'framer-motion';
 
 export const StatusPill = ({ status }: StatusPillProps) => {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.cancelled;
-  const isPending = status === 'pending';
+  const isActive = status === 'pending' || status === 'en_route';
 
   return (
     <motion.span 
-      initial={isPending ? { opacity: 0.8, scale: 0.95 } : {}}
-      animate={isPending ? { 
+      initial={isActive ? { opacity: 0.8, scale: 0.95 } : {}}
+      animate={isActive ? { 
         opacity: [0.8, 1, 0.8],
         scale: [0.98, 1, 0.98],
       } : {}}
-      transition={isPending ? {
+      transition={isActive ? {
         duration: 2,
         repeat: Infinity,
         ease: "easeInOut"
       } : {}}
-      className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-white/5 flex items-center gap-1.5 w-fit shadow-sm"
+      className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-white/5 flex items-center gap-1.5 w-fit shadow-sm transition-all duration-500"
       style={{ 
         backgroundColor: config.bg,
         color: config.color,
-        boxShadow: isPending ? `0 0 12px ${config.color}30` : 'none'
+        boxShadow: isActive ? `0 0 15px ${config.color}40` : 'none',
+        borderColor: isActive ? `${config.color}30` : 'rgba(255,255,255,0.05)'
       }}
     >
       {config.icon}
