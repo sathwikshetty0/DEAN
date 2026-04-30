@@ -11,11 +11,12 @@ import dynamic from 'next/dynamic';
 
 const CommandCenterMap = dynamic(() => import('@/components/admin/CommandCenterMap').then(m => m.CommandCenterMap), { ssr: false });
 import { Log } from '@/lib/types/app.types';
+import { generateCSV, downloadCSV } from '@/lib/utils/csv';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   PieChart, Pie, Cell,
 } from 'recharts';
-import { AlertCircle, CheckCircle2, Shield, Radio, TrendingUp } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Shield, Radio, TrendingUp, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const COLORS = ['#FF2D55', '#3B82F6', '#F59E0B', '#10B981', '#94A3B8', '#CC0033'];
@@ -77,6 +78,20 @@ export default function AdminOverview() {
     }
   );
 
+  const handleExport = async () => {
+    const { data: alerts } = await supabase.from('alerts').select('*').limit(100);
+    if (!alerts || alerts.length === 0) return;
+    
+    const headers = ['ID', 'Code', 'Type', 'Status', 'Lat', 'Lng', 'Created At'];
+    const rows = alerts.map(a => [
+      a.id, a.alert_code, a.emergency_type, a.status, 
+      a.location_lat.toString(), a.location_lng.toString(), a.created_at
+    ]);
+    
+    const csv = generateCSV(headers, rows);
+    downloadCSV(csv, `dean-alerts-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
   return (
     <div className="space-y-8">
       {/* System Status */}
@@ -84,9 +99,17 @@ export default function AdminOverview() {
 
       {/* TACTICAL MAP - NEW FEATURE */}
       <div className="space-y-4">
-        <h3 className="text-xl font-extrabold font-syne flex items-center gap-2">
-          <Shield className="w-5 h-5 text-blue-500" /> Tactical Command Center
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-extrabold font-syne flex items-center gap-2">
+            <Shield className="w-5 h-5 text-blue-500" /> Tactical Command Center
+          </h3>
+          <button 
+            onClick={handleExport}
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-xs font-bold hover:bg-[var(--bg-tertiary)] transition-colors"
+          >
+            <Download className="w-4 h-4" /> Export Report
+          </button>
+        </div>
         <CommandCenterMap />
       </div>
 
