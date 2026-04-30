@@ -26,6 +26,7 @@ export default function AdminOverview() {
   const [stats, setStats] = useState({ activeAlerts: 0, resolvedToday: 0, onlineResponders: 0, p2pEvents: 0 });
   const [logs, setLogs] = useState<Log[]>([]);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<string | null>(null);
 
   const [chartData] = useState([
     { name: 'Mon', count: 12 }, { name: 'Tue', count: 18 }, { name: 'Wed', count: 15 },
@@ -174,9 +175,24 @@ export default function AdminOverview() {
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                <Pie 
+                  data={pieData} 
+                  cx="50%" 
+                  cy="50%" 
+                  innerRadius={60} 
+                  outerRadius={80} 
+                  paddingAngle={5} 
+                  dataKey="value"
+                  onClick={(data) => setFilterType(prev => prev === data.name ? null : data.name)}
+                  cursor="pointer"
+                >
                   {pieData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                      stroke={filterType === pieData[index].name ? '#fff' : 'none'}
+                      strokeWidth={2}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
