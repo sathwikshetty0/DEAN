@@ -99,10 +99,12 @@ export const getCompassDirection = (lat1: number, lon1: number, lat2: number, lo
 };
 
 export const calculateETA = (distanceKm: number): number => {
-  // Average city speed 30km/h
-  const speedKmH = 30;
+  // Average emergency response speed 45km/h (higher than 30 due to priority)
+  const speedKmH = 45;
   const timeHours = distanceKm / speedKmH;
-  return Math.round(timeHours * 60); // minutes
+  const mins = timeHours * 60;
+  // Add 1 min "activation" overhead
+  return Math.ceil(mins + 1); 
 };
 
 export const formatETA = (mins: number): string => {
