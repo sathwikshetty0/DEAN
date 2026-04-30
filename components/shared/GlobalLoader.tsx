@@ -17,22 +17,25 @@ export const GlobalLoader = ({ show, message = 'Loading...' }: GlobalLoaderProps
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] bg-[#121212]/80 backdrop-blur-md flex flex-col items-center justify-center gap-6"
+          className="fixed inset-0 z-[9999] bg-[#0A0E1A]/90 backdrop-blur-xl flex flex-col items-center justify-center gap-6"
         >
+          {/* Noise Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+          
           <div className="relative">
             <motion.div
               animate={{
-                scale: [1, 1.2, 1],
-                rotate: [0, 180, 360],
+                scale: [1, 1.1, 1],
+                rotate: [0, 90, 180, 270, 360],
               }}
               transition={{
-                duration: 2,
+                duration: 3,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "linear"
               }}
-              className="w-16 h-16 border-4 border-sos/10 border-t-sos rounded-2xl"
+              className="w-20 h-20 border-2 border-sos/20 border-t-sos border-r-sos rounded-[2rem] shadow-[0_0_40px_rgba(255,45,85,0.2)]"
             />
-            <Zap className="w-6 h-6 text-sos absolute inset-0 m-auto animate-pulse" />
+            <Zap className="w-8 h-8 text-sos absolute inset-0 m-auto drop-shadow-[0_0_10px_rgba(255,45,85,0.5)]" />
           </div>
           
           <div className="flex flex-col items-center gap-2">
