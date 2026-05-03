@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 };
 
 import { InstallPrompt } from "@/components/shared/InstallPrompt";
+import { OfflineSync } from "@/components/shared/OfflineSync";
 
 export default function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default function RootLayout({
         <NetworkProvider>
           <PWARegistration />
           <InstallPrompt />
+          <OfflineSync />
           <AuthProvider>
             <AlertProvider>
               <OfflineBanner />
