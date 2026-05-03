@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   themeColor: "#FF2D55",
 };
 
+import { InstallPrompt } from "@/components/shared/InstallPrompt";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,6 +44,7 @@ export default function RootLayout({
       >
         <NetworkProvider>
           <PWARegistration />
+          <InstallPrompt />
           <AuthProvider>
             <AlertProvider>
               <OfflineBanner />
