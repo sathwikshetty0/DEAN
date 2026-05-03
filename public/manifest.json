@@ -1,23 +1,32 @@
 {
   "name": "D-EAN | Decentralized Emergency Network",
   "short_name": "D-EAN",
-  "description": "Resilient community-driven emergency coordination platform.",
+  "description": "Resilient community-driven emergency coordination platform for Mangaluru.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0E1A",
   "theme_color": "#FF2D55",
+  "orientation": "portrait",
+  "scope": "/",
   "icons": [
     {
-      "src": "/next.svg",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/next.svg",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trigger SOS",
+      "url": "/sos",
+      "description": "Quickly trigger an SOS alert"
     }
   ]
 }
