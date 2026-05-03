@@ -1,35 +1,31 @@
-export const generateCSV = (headers: string[], rows: string[][]): string => {
-  const escapeField = (field: string): string => {
-    if (field.includes(',') || field.includes('"') || field.includes('\n')) {
-      return `"${field.replace(/"/g, '""')}"`;
-    }
-    return field;
-  };
+export const exportToCSV = (data: any[], filename: string) => {
+  if (data.length === 0) return;
 
-  const headerLine = headers.map(escapeField).join(',');
-  const dataLines = rows.map(row => row.map(escapeField).join(','));
-  return [headerLine, ...dataLines].join('\n');
-};
+  const headers = Object.keys(data[0]);
+  const csvRows = [];
 
-export const csvResponse = (csv: string, filename: string): Response => {
-  return new Response(csv, {
-    headers: {
-      'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${filename}"`,
-    },
-  });
-};
+  // Add header row
+  csvRows.push(headers.join(','));
 
-export const downloadCSV = (csv: string, filename: string) => {
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  if (link.download !== undefined) {
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Add data rows
+  for (const row of data) {
+    const values = headers.map(header => {
+      const val = row[header];
+      const escaped = ('' + val).replace(/"/g, '\\"');
+      return `"${escaped}"`;
+    });
+    csvRows.push(values.join(','));
   }
+
+  const csvContent = csvRows.join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
