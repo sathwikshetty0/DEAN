@@ -85,6 +85,7 @@ export const CommandCenterMap = () => {
   const [responders, setResponders] = useState<Profile[]>([]);
   const [bounds, setBounds] = useState<L.LatLngBoundsExpression | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
+  const [isHeatmap, setIsHeatmap] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,22 +175,29 @@ export const CommandCenterMap = () => {
           <Marker 
             key={alert.id} 
             position={[alert.location_lat, alert.location_lng]}
-            icon={createCustomIcon(alert.emergency_type, alert.status)}
+            icon={isHeatmap ? L.divIcon({
+              className: 'heatmap-marker',
+              html: `<div class="w-20 h-20 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>`,
+              iconSize: [80, 80],
+              iconAnchor: [40, 40],
+            }) : createCustomIcon(alert.emergency_type, alert.status)}
           >
-            <Popup className="custom-popup">
-               <div className="p-2 min-w-[150px]">
-                  <div className="text-xs font-extrabold text-sos mb-1">{alert.alert_code}</div>
-                  <div className="text-[10px] font-bold uppercase mb-2">{alert.emergency_type} Emergency</div>
-                  <div className="flex items-center gap-2 text-[9px] text-gray-400">
-                     <div className={`w-1.5 h-1.5 rounded-full ${alert.status === 'pending' ? 'bg-red-500' : 'bg-orange-500'}`} />
-                     {alert.status.toUpperCase()}
-                  </div>
-               </div>
-            </Popup>
+            {!isHeatmap && (
+              <Popup className="custom-popup">
+                 <div className="p-2 min-w-[150px]">
+                    <div className="text-xs font-extrabold text-sos mb-1">{alert.alert_code}</div>
+                    <div className="text-[10px] font-bold uppercase mb-2">{alert.emergency_type} Emergency</div>
+                    <div className="flex items-center gap-2 text-[9px] text-gray-400">
+                       <div className={`w-1.5 h-1.5 rounded-full ${alert.status === 'pending' ? 'bg-red-500' : 'bg-orange-500'}`} />
+                       {alert.status.toUpperCase()}
+                    </div>
+                 </div>
+              </Popup>
+            )}
           </Marker>
         ))}
 
-        {responders.map((resp) => (
+        {!isHeatmap && responders.map((resp) => (
           resp.location_lat && (
             <Marker 
               key={resp.id} 
@@ -209,22 +217,38 @@ export const CommandCenterMap = () => {
 
       {/* Map Legend */}
       <div className="absolute top-6 left-6 z-[1000] p-4 bg-[var(--bg-secondary)]/80 backdrop-blur-md border border-[var(--border-default)] rounded-2xl shadow-xl space-y-3">
-         <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-[#FF2D55]" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Active Alert</span>
-         </div>
-         <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-[#10B981]" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Available Responder</span>
-         </div>
-         <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-[#3B82F6]" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Busy Responder</span>
-         </div>
+         {!isHeatmap ? (
+           <>
+             <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-[#FF2D55]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Active Alert</span>
+             </div>
+             <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-[#10B981]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Available Responder</span>
+             </div>
+             <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-[#3B82F6]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Busy Responder</span>
+             </div>
+           </>
+         ) : (
+           <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">Density Heatmap</span>
+           </div>
+         )}
       </div>
 
       {/* Map Actions */}
       <div className="absolute bottom-6 right-6 z-[1000] flex flex-col gap-2">
+         <button 
+           onClick={() => setIsHeatmap(!isHeatmap)}
+           className={`p-3 border rounded-xl shadow-xl transition-all group ${isHeatmap ? 'bg-sos border-sos text-white' : 'bg-[var(--bg-secondary)] border-[var(--border-default)] text-[var(--text-muted)]'}`}
+           title="Toggle Heatmap"
+         >
+            <Zap className={`w-5 h-5 group-hover:scale-110 transition-transform ${isHeatmap ? 'animate-pulse' : ''}`} />
+         </button>
          <button 
            onClick={() => {
               const points: [number, number][] = [];
