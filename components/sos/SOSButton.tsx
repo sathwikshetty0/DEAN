@@ -25,7 +25,7 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
     
     // Initial tactile feedback
     if ('vibrate' in navigator) {
-      navigator.vibrate(20);
+      navigator.vibrate(50);
     }
     
     holdTimer.current = setTimeout(() => {
@@ -34,7 +34,14 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
     }, 1500);
 
     progressInterval.current = setInterval(() => {
-      setProgress(prev => Math.min(prev + (100 / 15), 100));
+      setProgress(prev => {
+        const next = Math.min(prev + (100 / 15), 100);
+        // Increasing vibration intensity as we get closer
+        if ('vibrate' in navigator && next % 20 === 0) {
+          navigator.vibrate(next / 2);
+        }
+        return next;
+      });
     }, 100);
   };
 
@@ -47,22 +54,33 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
 
   const handleSOS = () => {
     if ('vibrate' in navigator) {
-      navigator.vibrate([200, 100, 200]);
+      // Urgent triple pulse
+      navigator.vibrate([300, 100, 300, 100, 500]);
     }
     onClick();
   };
 
   return (
-    <div className="relative">
+    <div className="relative group/sos">
+      {/* Background Outer Ring */}
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.1, 0.3],
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute -inset-10 rounded-full bg-[#FF2D55]/10 blur-2xl -z-10"
+      />
+
       {/* Progress Ring */}
-      <svg className="absolute inset-0 w-56 h-56 -m-4 -rotate-90 pointer-events-none">
+      <svg className="absolute inset-0 w-56 h-56 -m-4 -rotate-90 pointer-events-none drop-shadow-[0_0_15px_rgba(255,45,85,0.5)]">
         <circle
           cx="112"
           cy="112"
           r="108"
           fill="none"
-          stroke="rgba(255,45,85,0.1)"
-          strokeWidth="4"
+          stroke="rgba(255,45,85,0.05)"
+          strokeWidth="6"
         />
         <motion.circle
           cx="112"
@@ -70,7 +88,7 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
           r="108"
           fill="none"
           stroke="#FF2D55"
-          strokeWidth="4"
+          strokeWidth="6"
           strokeDasharray="678"
           animate={{ strokeDashoffset: 678 - (678 * progress) / 100 }}
           transition={{ duration: 0.1 }}
@@ -88,38 +106,38 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
         onTouchEnd={endHold}
         disabled={loading}
         className={clsx(
-          "relative w-48 h-48 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-[0_0_50px_rgba(255,45,85,0.3)]",
-          loading ? "bg-gray-800" : isHolding ? "bg-[#CC0033]" : "bg-gradient-to-br from-[#FF2D55] to-[#CC0033]",
-          "border-8 border-white/10 overflow-hidden group z-10"
+          "relative w-48 h-48 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-[0_0_60px_rgba(255,45,85,0.4)]",
+          loading ? "bg-gray-800" : isHolding ? "bg-[#B8002D]" : "bg-gradient-to-br from-[#FF2D55] via-[#E6294D] to-[#CC0033]",
+          "border-[10px] border-white/20 overflow-hidden group z-10"
         )}
       >
         {/* Ripple Effect Background */}
         {!loading && (
           <motion.div
             animate={isHolding ? 
-              { scale: [1, 1.4, 1], opacity: [0.2, 0.4, 0.2] } : 
-              { scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }
+              { scale: [1, 1.6, 1], opacity: [0.1, 0.3, 0.1] } : 
+              { scale: [1, 1.3, 1], opacity: [0.2, 0.05, 0.2] }
             }
-            transition={{ duration: isHolding ? 0.5 : 2, repeat: Infinity }}
+            transition={{ duration: isHolding ? 0.3 : 2, repeat: Infinity }}
             className="absolute inset-0 bg-white"
           />
         )}
 
-        <span className="text-5xl font-black text-white mb-1 drop-shadow-lg tracking-tighter">
+        <span className="text-5xl font-black text-white mb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] tracking-tighter">
           {isHolding ? "HOLD" : "SOS"}
         </span>
-        <span className="text-[10px] uppercase tracking-[0.2em] text-white/80 font-bold px-4 text-center">
+        <span className="text-[11px] uppercase tracking-[0.25em] text-white font-black px-4 text-center drop-shadow-md">
           {loading ? "Transmitting..." : isHolding ? "Keep Holding" : "Hold to help"}
         </span>
         
         {mode === 'p2p' && (
-          <div className="absolute top-8 right-8 bg-orange-500 text-white text-[9px] font-black px-3 py-1 rounded-full border-2 border-white/20 shadow-lg animate-pulse">
+          <div className="absolute top-8 right-8 bg-amber-500 text-white text-[10px] font-black px-3 py-1 rounded-full border-2 border-white/20 shadow-xl animate-pulse">
             MESH
           </div>
         )}
 
         {/* Shine Effect */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
       </motion.button>
     </div>
   );
