@@ -22,6 +22,8 @@ export const StatusPill = ({ status }: StatusPillProps) => {
 
   return (
     <motion.span 
+      whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+      whileTap={{ scale: 0.95 }}
       initial={isActive ? { opacity: 0.8, scale: 0.95 } : {}}
       animate={isActive ? { 
         opacity: [0.8, 1, 0.8],
@@ -31,13 +33,17 @@ export const StatusPill = ({ status }: StatusPillProps) => {
         duration: 2,
         repeat: Infinity,
         ease: "easeInOut"
-      } : {}}
-      className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-white/5 flex items-center gap-1.5 w-fit shadow-sm transition-all duration-500"
+      } : {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }}
+      className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-white/5 flex items-center gap-1.5 w-fit shadow-sm transition-all cursor-default select-none"
       style={{ 
         backgroundColor: config.bg,
         color: config.color,
-        boxShadow: isActive ? `0 0 15px ${config.color}40` : 'none',
-        borderColor: isActive ? `${config.color}30` : 'rgba(255,255,255,0.05)'
+        boxShadow: isActive ? `0 0 15px ${config.color}30` : 'none',
+        borderColor: isActive ? `${config.color}40` : 'rgba(255,255,255,0.1)'
       }}
     >
       {config.icon}
@@ -45,3 +51,4 @@ export const StatusPill = ({ status }: StatusPillProps) => {
     </motion.span>
   );
 };
+
