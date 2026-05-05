@@ -292,6 +292,22 @@ export const CommandCenterMap = () => {
          </button>
          <button 
            onClick={() => {
+              if (navigator.geolocation) {
+                 navigator.geolocation.getCurrentPosition((pos) => {
+                    setBounds([[pos.coords.latitude, pos.coords.longitude], [pos.coords.latitude, pos.coords.longitude]]);
+                 });
+              }
+           }}
+           className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl text-[var(--text-muted)] hover:text-emerald-500 shadow-xl transition-all group"
+           title="Center on my location"
+         >
+            <div className="relative">
+               <User className="w-5 h-5 group-hover:scale-110 transition-transform" />
+               <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-[var(--bg-secondary)]" />
+            </div>
+         </button>
+         <button 
+           onClick={() => {
               const points: [number, number][] = [];
               alerts.forEach(a => points.push([a.location_lat, a.location_lng]));
               responders.filter(r => r.location_lat && r.location_lng).forEach(r => points.push([r.location_lat!, r.location_lng!]));
@@ -306,6 +322,7 @@ export const CommandCenterMap = () => {
          >
             <NavIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
          </button>
+
       </div>
     </div>
   );
