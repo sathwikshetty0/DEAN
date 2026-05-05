@@ -198,17 +198,32 @@ export const CommandCenterMap = () => {
             }) : getCustomIcon(alert.emergency_type, alert.status)}
           >
             {!isHeatmap && (
-              <Popup className="custom-popup">
-                 <div className="p-2 min-w-[150px]">
-                    <div className="text-xs font-extrabold text-sos mb-1">{alert.alert_code}</div>
-                    <div className="text-[10px] font-bold uppercase mb-2">{alert.emergency_type} Emergency</div>
-                    <div className="flex items-center gap-2 text-[9px] text-gray-400">
-                       <div className={`w-1.5 h-1.5 rounded-full ${alert.status === 'pending' ? 'bg-red-500' : 'bg-orange-500'}`} />
-                       {alert.status.toUpperCase()}
+              <Popup className="custom-popup" offset={[0, -20]}>
+                 <div className="p-3 min-w-[180px] bg-[var(--bg-secondary)] border-0">
+                    <div className="flex justify-between items-start mb-2">
+                       <div className="text-[10px] font-extrabold text-sos tracking-tighter bg-sos/10 px-1.5 py-0.5 rounded-md">{alert.alert_code}</div>
+                       <div className="text-[9px] text-gray-500 font-medium">Active</div>
                     </div>
+                    <div className="text-[11px] font-bold text-white mb-3 flex items-center gap-2">
+                       {alert.emergency_type === 'medical' ? '🏥' : alert.emergency_type === 'fire' ? '🔥' : alert.emergency_type === 'accident' ? '🚗' : '🚨'}
+                       {alert.emergency_type.toUpperCase()} EMERGENCY
+                    </div>
+                    <div className="space-y-1.5">
+                       <div className="flex items-center gap-2 text-[10px] text-gray-400">
+                          <div className={`w-1.5 h-1.5 rounded-full ${alert.status === 'pending' ? 'bg-red-500 animate-pulse' : 'bg-orange-500'}`} />
+                          <span className="font-semibold uppercase">{alert.status}</span>
+                       </div>
+                       <div className="text-[9px] text-gray-500 line-clamp-2 italic">
+                          {alert.description || "No description provided."}
+                       </div>
+                    </div>
+                    <button className="w-full mt-3 py-2 bg-[var(--bg-primary)] hover:bg-sos/10 text-[9px] font-bold uppercase tracking-widest text-sos border border-sos/20 rounded-lg transition-colors">
+                       Manage Alert
+                    </button>
                  </div>
               </Popup>
             )}
+
           </Marker>
         ))}
 
@@ -220,12 +235,22 @@ export const CommandCenterMap = () => {
               icon={getResponderIcon(resp.is_available)}
             >
 
-              <Popup>
-                 <div className="p-1">
-                    <div className="text-xs font-bold">{resp.name}</div>
-                    <div className="text-[9px] text-gray-400">{resp.is_available ? 'Available' : 'Assigned'}</div>
+              <Popup className="custom-popup">
+                 <div className="p-3 min-w-[140px]">
+                    <div className="flex items-center gap-2 mb-2">
+                       <div className={`w-2 h-2 rounded-full ${resp.is_available ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-blue-500'}`} />
+                       <div className="text-[11px] font-bold text-white">{resp.name}</div>
+                    </div>
+                    <div className="text-[9px] text-gray-500 uppercase tracking-widest font-bold mb-2">
+                       {resp.is_available ? 'Ready for Dispatch' : 'On Assignment'}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[8px] text-gray-400 bg-white/5 px-1.5 py-1 rounded-md">
+                       <User className="w-2.5 h-2.5" />
+                       ID: {resp.id.slice(0, 8)}
+                    </div>
                  </div>
               </Popup>
+
             </Marker>
           )
         ))}
