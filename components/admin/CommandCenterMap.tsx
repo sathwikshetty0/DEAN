@@ -20,11 +20,16 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const createCustomIcon = (type: string, status: string) => {
+const ICON_CACHE: Record<string, L.DivIcon> = {};
+
+const getCustomIcon = (type: string, status: string) => {
+  const key = `${type}-${status}`;
+  if (ICON_CACHE[key]) return ICON_CACHE[key];
+
   const color = status === 'pending' ? '#FF2D55' : '#F59E0B';
   const isPending = status === 'pending';
   
-  return L.divIcon({
+  const icon = L.divIcon({
     html: `
       <div class="relative flex items-center justify-center">
         ${isPending ? `
@@ -43,11 +48,17 @@ const createCustomIcon = (type: string, status: string) => {
     iconSize: [48, 48],
     iconAnchor: [24, 48],
   });
+
+  ICON_CACHE[key] = icon;
+  return icon;
 };
 
-const createResponderIcon = (isAvailable: boolean) => {
+const getResponderIcon = (isAvailable: boolean) => {
+  const key = `responder-${isAvailable}`;
+  if (ICON_CACHE[key]) return ICON_CACHE[key];
+
   const color = isAvailable ? '#10B981' : '#3B82F6';
-  return L.divIcon({
+  const icon = L.divIcon({
     html: `
       <div class="relative flex items-center justify-center">
         ${isAvailable ? `
@@ -63,7 +74,11 @@ const createResponderIcon = (isAvailable: boolean) => {
     iconSize: [38, 38],
     iconAnchor: [19, 19],
   });
+
+  ICON_CACHE[key] = icon;
+  return icon;
 };
+
 
 interface MapUpdaterProps {
   bounds?: L.LatLngBoundsExpression;
@@ -180,7 +195,7 @@ export const CommandCenterMap = () => {
               html: `<div class="w-20 h-20 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>`,
               iconSize: [80, 80],
               iconAnchor: [40, 40],
-            }) : createCustomIcon(alert.emergency_type, alert.status)}
+            }) : getCustomIcon(alert.emergency_type, alert.status)}
           >
             {!isHeatmap && (
               <Popup className="custom-popup">
@@ -202,8 +217,9 @@ export const CommandCenterMap = () => {
             <Marker 
               key={resp.id} 
               position={[resp.location_lat, resp.location_lng]}
-              icon={createResponderIcon(resp.is_available)}
+              icon={getResponderIcon(resp.is_available)}
             >
+
               <Popup>
                  <div className="p-1">
                     <div className="text-xs font-bold">{resp.name}</div>
