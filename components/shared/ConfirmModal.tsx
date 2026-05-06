@@ -25,10 +25,24 @@ export const ConfirmModal = ({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open) onCancel();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, onCancel]);
+
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -45,45 +59,47 @@ export const ConfirmModal = ({
               stiffness: 300,
               damping: 25
             }}
-            className="relative bg-[#121212] border border-white/10 rounded-[2rem] p-8 max-w-md w-full shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] overflow-hidden"
+            className="relative bg-[#121212] border border-white/10 rounded-[2.5rem] p-10 max-w-md w-full shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] overflow-hidden"
           >
             {/* Background Accent */}
-            <div className={`absolute top-0 left-0 w-full h-1 ${
+            <div className={`absolute top-0 left-0 w-full h-1.5 ${
               variant === 'danger' ? 'bg-red-500' : 'bg-blue-500'
             }`} />
 
             <button
               onClick={onCancel}
-              className="absolute top-6 right-6 p-2 rounded-full text-white/40 hover:text-white hover:bg-white/5 transition-all"
+              aria-label="Close modal"
+              className="absolute top-6 right-6 p-2.5 rounded-full text-white/40 hover:text-white hover:bg-white/5 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex flex-col items-center text-center mt-4">
-              <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-6 ${
+            <div className="flex flex-col items-center text-center">
+              <div className={`w-20 h-20 rounded-[1.75rem] flex items-center justify-center mb-8 ${
                 variant === 'danger' 
-                  ? 'bg-red-500/10 border border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.1)]' 
-                  : 'bg-blue-500/10 border border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]'
+                  ? 'bg-red-500/10 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.15)]' 
+                  : 'bg-blue-500/10 border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.15)]'
               }`}>
                 <AlertTriangle className={`w-10 h-10 ${variant === 'danger' ? 'text-red-500' : 'text-blue-500'}`} />
               </div>
 
-              <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">{title}</h3>
-              <p className="text-white/60 leading-relaxed mb-10">{description}</p>
+              <h3 id="modal-title" className="text-3xl font-extrabold tracking-tight mb-3 text-white">{title}</h3>
+              <p id="modal-description" className="text-white/60 leading-relaxed text-sm mb-12 px-2">{description}</p>
 
-              <div className="flex gap-3 w-full">
+              <div className="flex gap-4 w-full">
                 <button
                   onClick={onCancel}
-                  className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 font-semibold text-sm text-white hover:bg-white/10 transition-all active:scale-[0.98]"
+                  className="flex-1 py-4.5 rounded-2xl bg-white/5 border border-white/10 font-bold text-sm text-white hover:bg-white/10 transition-all active:scale-[0.98] outline-none focus:ring-2 focus:ring-white/20"
                 >
                   {cancelText}
                 </button>
                 <button
                   onClick={onConfirm}
-                  className={`flex-1 py-4 rounded-2xl font-semibold text-sm text-white transition-all active:scale-[0.98] shadow-lg ${
+                  autoFocus
+                  className={`flex-1 py-4.5 rounded-2xl font-extrabold text-sm text-white transition-all active:scale-[0.98] shadow-xl outline-none focus:ring-2 ${
                     variant === 'danger'
-                      ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20'
-                      : 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/20'
+                      ? 'bg-red-500 hover:bg-red-600 shadow-red-500/30 focus:ring-red-500/50'
+                      : 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/30 focus:ring-blue-500/50'
                   }`}
                 >
                   {confirmText}
@@ -96,3 +112,4 @@ export const ConfirmModal = ({
     </AnimatePresence>
   );
 };
+
