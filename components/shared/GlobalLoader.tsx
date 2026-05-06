@@ -17,46 +17,76 @@ export const GlobalLoader = ({ show, message = 'Loading...' }: GlobalLoaderProps
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] bg-[#0A0E1A]/90 backdrop-blur-xl flex flex-col items-center justify-center gap-6"
+          className="fixed inset-0 z-[9999] bg-[#0A0E1A]/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8"
         >
           {/* Noise Overlay */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
           
-          <div className="relative">
+          <div className="relative group">
             <motion.div
               animate={{
                 scale: [1, 1.1, 1],
-                rotate: [0, 90, 180, 270, 360],
+                rotate: [0, 360],
+                borderRadius: ["2rem", "3rem", "2rem"]
               }}
               transition={{
-                duration: 3,
+                duration: 4,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "easeInOut"
               }}
-              className="w-20 h-20 border-2 border-sos/20 border-t-sos border-r-sos rounded-[2rem] shadow-[0_0_40px_rgba(255,45,85,0.2)]"
+              className="w-24 h-24 border border-sos/30 border-t-sos border-r-sos shadow-[0_0_50px_rgba(255,45,85,0.25)] flex items-center justify-center"
             />
-            <Zap className="w-8 h-8 text-sos absolute inset-0 m-auto drop-shadow-[0_0_10px_rgba(255,45,85,0.5)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+               <motion.div
+                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                 transition={{ duration: 2, repeat: Infinity }}
+               >
+                 <Zap className="w-10 h-10 text-sos drop-shadow-[0_0_15px_rgba(255,45,85,0.6)]" />
+               </motion.div>
+            </div>
           </div>
           
-          <div className="flex flex-col items-center gap-2">
-            <motion.span
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-[10px] font-bold uppercase tracking-[0.3em] text-sos"
-            >
-              {message}
-            </motion.span>
-            <div className="w-32 h-1 bg-white/5 rounded-full overflow-hidden">
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex gap-1 overflow-hidden h-4">
+              {message.split('').map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ 
+                    delay: i * 0.05,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    duration: 1,
+                    repeatDelay: 2
+                  }}
+                  className="text-[11px] font-black uppercase tracking-widest text-sos"
+                >
+                  {char === ' ' ? '\u00A0' : char}
+                </motion.span>
+              ))}
+            </div>
+            
+            <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden relative">
               <motion.div
-                initial={{ x: '-100%' }}
-                animate={{ x: '100%' }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                className="w-full h-full bg-gradient-to-r from-transparent via-sos to-transparent"
+                initial={{ left: '-100%' }}
+                animate={{ left: '100%' }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-sos to-transparent"
               />
             </div>
           </div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.3 }}
+            className="absolute bottom-12 text-[8px] font-bold text-white/50 tracking-[0.5em] uppercase"
+          >
+            System Resilient • D-EAN Protocol
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
+
