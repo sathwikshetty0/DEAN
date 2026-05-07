@@ -3,25 +3,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const LoadingDots = ({ color = 'currentColor' }: { color?: string }) => {
+export const LoadingDots = ({ 
+  color = 'currentColor',
+  size = 'md' 
+}: { 
+  color?: string;
+  size?: 'sm' | 'md' | 'lg';
+}) => {
+  const dotSize = size === 'sm' ? 'w-1 h-1' : size === 'lg' ? 'w-2 h-2' : 'w-1.5 h-1.5';
+  
   return (
-    <div className="flex gap-1 items-center justify-center">
+    <div className="flex gap-1.5 items-center justify-center">
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
           animate={{
-            scale: [1, 1.5, 1],
+            y: [0, -4, 0],
             opacity: [0.3, 1, 0.3],
           }}
           transition={{
-            duration: 1,
+            duration: 0.8,
             repeat: Infinity,
-            delay: i * 0.2,
+            delay: i * 0.15,
+            ease: "easeInOut"
           }}
-          className="w-1.5 h-1.5 rounded-full"
+          className={`${dotSize} rounded-full shadow-[0_0_8px_rgba(0,0,0,0.2)]`}
           style={{ backgroundColor: color }}
         />
       ))}
     </div>
   );
 };
+
