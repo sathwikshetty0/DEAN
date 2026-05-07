@@ -49,33 +49,54 @@ export const InstallPrompt = () => {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-6 left-6 right-6 z-[100] md:left-auto md:right-6 md:w-80"
         >
-          <div className="bg-[#1C2333]/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#FF2D55]/20 flex items-center justify-center flex-shrink-0">
-                <Download className="w-6 h-6 text-[#FF2D55]" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-white font-semibold text-sm">Install D-EAN</h3>
-                <p className="text-slate-400 text-xs mt-1">
-                  Install for offline access and faster emergency response.
-                </p>
-                <div className="flex gap-2 mt-3">
-                  <button
-                    onClick={handleInstall}
-                    className="flex-1 bg-[#FF2D55] hover:bg-[#E6294D] text-white text-xs font-bold py-2 rounded-lg transition-colors"
-                  >
-                    Install Now
-                  </button>
-                  <button
-                    onClick={() => setIsVisible(false)}
-                    className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <X className="w-4 h-4 text-slate-400" />
-                  </button>
+          <div className="bg-[#1C2333]/95 backdrop-blur-2xl border border-white/10 p-6 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] relative overflow-hidden">
+             {/* Gradient Background Accent */}
+             <div className="absolute -top-10 -right-10 w-32 h-32 bg-sos/20 blur-[60px] rounded-full pointer-events-none" />
+             
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-sos/10 border border-sos/20 flex items-center justify-center flex-shrink-0">
+                  <Download className="w-7 h-7 text-sos animate-bounce" />
                 </div>
+                <div>
+                   <h3 className="text-white font-black text-lg tracking-tight">Install D-EAN</h3>
+                   <div className="text-[10px] font-bold text-sos uppercase tracking-widest">Resilience Protocol Active</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                 <div className="flex items-center gap-2 text-[11px] font-medium text-slate-300">
+                    <div className="w-1 h-1 bg-sos rounded-full" />
+                    Offline emergency broadcasts
+                 </div>
+                 <div className="flex items-center gap-2 text-[11px] font-medium text-slate-300">
+                    <div className="w-1 h-1 bg-sos rounded-full" />
+                    Real-time safety notifications
+                 </div>
+                 <div className="flex items-center gap-2 text-[11px] font-medium text-slate-300">
+                    <div className="w-1 h-1 bg-sos rounded-full" />
+                    High-speed response interface
+                 </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleInstall}
+                  className="flex-1 bg-sos hover:bg-sos-hover text-white text-[11px] font-black uppercase tracking-wider py-3.5 rounded-xl transition-all shadow-lg shadow-sos/20 active:scale-95"
+                >
+                  Confirm Installation
+                </button>
+                <button
+                  onClick={() => setIsVisible(false)}
+                  className="px-4 bg-white/5 hover:bg-white/10 rounded-xl transition-all group"
+                  aria-label="Dismiss"
+                >
+                  <X className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                </button>
               </div>
             </div>
           </div>
+
         </motion.div>
       )}
     </AnimatePresence>
