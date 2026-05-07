@@ -17,14 +17,26 @@ export const formatDateTime = (dateStr: string): string => {
 export const formatRelativeTime = (dateStr: string): string => {
   const now = Date.now();
   const diff = now - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
+  const secs = Math.floor(diff / 1000);
+  if (secs < 60) return `${secs}s ago`;
+  const mins = Math.floor(secs / 60);
   if (mins < 60) return `${mins}m ago`;
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  if (days < 7) return `${days}d ago`;
+  return formatDate(dateStr);
 };
+
+export const formatPhone = (phone: string): string => {
+  const cleaned = ('' + phone).replace(/\D/g, '');
+  const match = cleaned.match(/^(\d{2})(\d{5})(\d{5})$/);
+  if (match) {
+    return `+${match[1]} ${match[2]}-${match[3]}`;
+  }
+  return phone;
+};
+
 
 export const formatTimer = (startDateStr: string): string => {
   const start = new Date(startDateStr).getTime();
