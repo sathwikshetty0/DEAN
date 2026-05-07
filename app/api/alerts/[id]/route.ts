@@ -60,15 +60,31 @@ export async function PATCH(
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Update Timeline
+  if (status) {
+    await supabase.from('alert_timeline').insert({
+      alert_id: data.id,
+      status: status,
+      description: `Alert status changed to ${status.replace('_', ' ')} by ${user.email}`,
+      actor_id: user.id
+    });
+  }
+
   // Log action
   await supabase.from('logs').insert({
     alert_id: data.id,
     alert_code: data.alert_code,
     action: `STATUS_UPDATE_${status.toUpperCase()}`,
     actor_id: user.id,
-    actor_role: 'responder',
-    metadata: { status }
+    actor_role: 'system_update',
+    metadata: { 
+      status, 
+      lat: responder_lat, 
+      lng: responder_lng,
+      timestamp: new Date().toISOString()
+    }
   });
 
   return NextResponse.json({ data });
 }
+
