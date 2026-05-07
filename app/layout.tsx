@@ -24,11 +24,26 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "D-EAN | Decentralized Emergency Assistance Network",
-  description:
-    "Whether the internet works or not — your SOS always gets through. Community-driven emergency coordination platform for Mangaluru.",
+  description: "Whether the internet works or not — your SOS always gets through. Community-driven emergency coordination platform for Mangaluru.",
   manifest: "/manifest.json",
-  themeColor: "#FF2D55",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "D-EAN",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "D-EAN Mangaluru",
+    title: "D-EAN | Decentralized Emergency Assistance Network",
+    description: "Mangaluru's resilient community emergency network. SOS broadcasts even during internet outages.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "D-EAN | Resilient SOS Network",
+    description: "Decentralized emergency coordination for Mangaluru.",
+  },
 };
+
 
 import { InstallPrompt } from "@/components/shared/InstallPrompt";
 import { OfflineSync } from "@/components/shared/OfflineSync";
