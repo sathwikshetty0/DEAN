@@ -112,13 +112,23 @@ export const AlertCard = ({ alert, userPosition, onAccept, onDecline, compact }:
       </div>
 
       {/* Routing Badge */}
-      <div className={clsx(
-        'absolute bottom-4 right-6 text-[9px] font-black tracking-[0.2em] uppercase px-2 py-0.5 rounded-md border',
-        alert.routing_mode === 'cloud'
-          ? 'text-blue-500 border-blue-500/20'
-          : 'text-amber-500 border-amber-500/20'
-      )}>
-        {alert.routing_mode}
+      <div className="absolute bottom-4 right-6 flex items-center gap-2">
+        {alert.routing_mode === 'p2p' && (
+          <div className={clsx(
+            'text-[8px] font-black tracking-widest px-1.5 py-0.5 rounded-sm border uppercase',
+            alert.is_synced ? 'text-green-500 border-green-500/20' : 'text-sos border-sos/20 animate-pulse'
+          )}>
+            {alert.is_synced ? 'Synced' : 'Local Only'}
+          </div>
+        )}
+        <div className={clsx(
+          'text-[9px] font-black tracking-[0.2em] uppercase px-2 py-0.5 rounded-md border',
+          alert.routing_mode === 'cloud'
+            ? 'text-blue-500 border-blue-500/20'
+            : 'text-amber-500 border-amber-500/20'
+        )}>
+          {alert.routing_mode}
+        </div>
       </div>
     </motion.div>
   );
