@@ -9,20 +9,41 @@ const updateResponderSchema = z.object({
   is_available: z.boolean().optional(),
 });
 
-export async function GET() {
+export async function GET(req: Request) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { data, error } = await supabase
+  const { searchParams } = new URL(req.url);
+  const queryParam = searchParams.get('q');
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '10');
+  const start = (page - 1) * limit;
+
+  let query = supabase
     .from('profiles')
-    .select('*')
-    .eq('role', 'responder')
-    .order('created_at', { ascending: false });
+    .select('*', { count: 'exact' })
+    .eq('role', 'responder');
+
+  if (queryParam) {
+    query = query.or(`name.ilike.%${queryParam}%,email.ilike.%${queryParam}%`);
+  }
+
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .range(start, start + limit - 1);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  return NextResponse.json({ data });
+  return NextResponse.json({ 
+    data, 
+    meta: {
+      total: count,
+      page,
+      limit,
+      totalPages: Math.ceil((count || 0) / limit)
+    } 
+  });
 }
 
 export async function PATCH(req: Request) {
