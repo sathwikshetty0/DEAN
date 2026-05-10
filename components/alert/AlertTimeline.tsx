@@ -122,51 +122,64 @@ export const AlertTimeline = ({
   // Horizontal layout
   return (
     <div className="flex justify-between relative px-4 py-8">
-      <div className="absolute top-12 left-0 w-full h-[2px] bg-white/5 -z-10" />
       {steps.map((step, i) => {
         const stepIndex = statusOrder.indexOf(step.key);
         const isCompleted = step.key === 'created' || stepIndex <= currentIndex;
         const isActive = step.key === status || (step.key === 'created' && status === 'pending');
+        const isLast = i === steps.length - 1;
 
         return (
-          <motion.div 
-            key={i} 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="flex flex-col items-center gap-3 relative"
-          >
-            <div className={clsx(
-              'w-10 h-10 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 bg-[#121212] z-10',
-              isCompleted
-                ? 'border-sos text-sos shadow-[0_0_20px_rgba(255,45,85,0.3)]'
-                : 'border-white/5 text-white/20',
-              isActive && 'scale-110'
-            )}>
-              <step.icon className={clsx('w-5 h-5', isActive && 'animate-pulse')} />
-            </div>
-            <div className="flex flex-col items-center">
-              <span className={clsx(
-                'text-[9px] font-black uppercase tracking-[0.2em] text-center max-w-[80px]',
-                isCompleted ? 'text-white' : 'text-white/20'
-              )}>
-                {step.label}
-              </span>
-              {step.timestamp && isCompleted && (
-                <span className="text-[8px] font-bold text-sos/60 mt-0.5">
-                  {formatRelativeTime(step.timestamp).split(' ')[0]}
-                </span>
-              )}
-            </div>
-            {isActive && (
-              <motion.div
-                layoutId="active-dot"
-                className="absolute -bottom-2 w-1.5 h-1.5 bg-sos rounded-full shadow-[0_0_10px_#FF2D55]"
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
+          <div key={i} className="flex-1 flex flex-col items-center relative">
+            {/* Connection Line */}
+            {!isLast && (
+              <div className="absolute top-5 left-[50%] w-full h-[2px] bg-white/5 -z-10">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: isCompleted ? '100%' : '0%' }}
+                  className="h-full bg-sos shadow-[0_0_10px_rgba(255,45,85,0.3)]"
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                />
+              </div>
             )}
-          </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex flex-col items-center gap-3 relative"
+            >
+              <div className={clsx(
+                'w-10 h-10 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 bg-[#121212] z-10',
+                isCompleted
+                  ? 'border-sos text-sos shadow-[0_0_20px_rgba(255,45,85,0.3)]'
+                  : 'border-white/5 text-white/20',
+                isActive && 'scale-110'
+              )}>
+                <step.icon className={clsx('w-5 h-5', isActive && 'animate-pulse')} />
+              </div>
+              <div className="flex flex-col items-center">
+                <span className={clsx(
+                  'text-[9px] font-black uppercase tracking-[0.2em] text-center max-w-[80px]',
+                  isCompleted ? 'text-white' : 'text-white/20'
+                )}>
+                  {step.label}
+                </span>
+                {step.timestamp && isCompleted && (
+                  <span className="text-[8px] font-bold text-sos/60 mt-0.5">
+                    {formatRelativeTime(step.timestamp).split(' ')[0]}
+                  </span>
+                )}
+              </div>
+              {isActive && (
+                <motion.div
+                  layoutId="active-dot"
+                  className="absolute -bottom-2 w-1.5 h-1.5 bg-sos rounded-full shadow-[0_0_10px_#FF2D55]"
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              )}
+            </motion.div>
+          </div>
         );
       })}
     </div>
