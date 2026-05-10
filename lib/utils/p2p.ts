@@ -6,11 +6,14 @@ let channel: BroadcastChannel | null = null;
 export type P2PMessageType = 'NEW_ALERT' | 'STATUS_UPDATE' | 'HEARTBEAT' | 'ACK';
 
 interface P2PMessage {
+  id: string;
   type: P2PMessageType;
   payload: any;
   sender_id?: string;
   timestamp: number;
 }
+
+const seenMessages = new Set<string>();
 
 const logP2P = (msg: string, data?: any) => {
   console.log(`%c[P2P] ${msg}`, 'color: #3B82F6; font-weight: bold', data || '');
@@ -26,12 +29,15 @@ export const initP2PChannel = () => {
 
 export const broadcastMessage = (type: P2PMessageType, payload: any) => {
   initP2PChannel();
+  const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   const message: P2PMessage = {
+    id,
     type,
     payload,
     timestamp: Date.now(),
   };
   channel?.postMessage(message);
+  seenMessages.add(id);
   logP2P(`Broadcast: ${type}`, payload);
 };
 
@@ -45,6 +51,15 @@ export const listenForP2P = (callback: (message: P2PMessage) => void) => {
   if (!channel) return;
   
   const handleMessage = (event: MessageEvent<P2PMessage>) => {
+    if (seenMessages.has(event.data.id)) return;
+    seenMessages.add(event.data.id);
+    
+    // Manage memory
+    if (seenMessages.size > 100) {
+      const iterator = seenMessages.values();
+      seenMessages.delete(iterator.next().value);
+    }
+
     logP2P(`Received: ${event.data.type}`, event.data.payload);
     callback(event.data);
   };
