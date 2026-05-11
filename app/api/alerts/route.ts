@@ -15,6 +15,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    const getPriority = (type: string): 'low' | 'medium' | 'high' | 'critical' => {
+      switch (type) {
+        case 'medical': return 'critical';
+        case 'fire': return 'critical';
+        case 'accident': return 'high';
+        case 'flood': return 'high';
+        case 'crime': return 'high';
+        default: return 'medium';
+      }
+    };
+
+    const priority = getPriority(body.emergency_type);
+
     const { data, error: insertError } = await supabase
       .from('alerts')
       .insert({ 
@@ -24,7 +37,8 @@ export async function POST(req: NextRequest) {
         emergency_type: body.emergency_type,
         description: body.description,
         routing_mode: body.routing_mode || 'cloud',
-        status: 'pending'
+        status: 'pending',
+        priority
       })
       .select()
       .single();
