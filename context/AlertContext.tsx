@@ -8,6 +8,7 @@ import { useAuth } from './AuthContext';
 interface AlertContextType {
   activeAlert: Alert | null;
   setActiveAlert: (alert: Alert | null) => void;
+  triggerAlert: (type: Alert['emergency_type'], location: { lat: number; lng: number }, description?: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -19,6 +20,33 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const supabase = createClient();
 
+  const triggerAlert = async (type: Alert['emergency_type'], location: { lat: number; lng: number }, description?: string) => {
+    try {
+      const res = await fetch('/api/alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emergency_type: type,
+          location_lat: location.lat,
+          location_lng: location.lng,
+          description,
+          routing_mode: 'cloud'
+        })
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to trigger alert');
+      }
+
+      const { data } = await res.json();
+      setActiveAlert(data);
+    } catch (error) {
+      console.error('Error triggering alert:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const fetchActiveAlert = async () => {
       if (!user) {
@@ -29,7 +57,7 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error } = await supabase
         .from('alerts')
         .select('*')
-        .eq('user_id', user.id) // Corrected from triggered_by to match schema in README
+        .eq('triggered_by', user.id)
         .in('status', ['pending', 'accepted', 'en_route'])
         .order('created_at', { ascending: false })
         .limit(1)
@@ -53,7 +81,7 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
             event: '*', 
             schema: 'public', 
             table: 'alerts',
-            filter: `user_id=eq.${user.id}`
+            filter: `triggered_by=eq.${user.id}`
           },
           (payload) => {
             const newAlert = payload.new as Alert;
@@ -75,8 +103,9 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
   const value = React.useMemo(() => ({
     activeAlert,
     setActiveAlert,
+    triggerAlert,
     loading
-  }), [activeAlert, loading]);
+  }), [activeAlert, loading, triggerAlert]);
 
   return (
     <AlertContext.Provider value={value}>
