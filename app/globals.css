@@ -103,13 +103,23 @@ h1, h2, h3, h4, h5, h6, .font-syne {
 
 /* ── Skeleton Shimmer ── */
 .skeleton {
-  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-elevated) 50%, var(--bg-tertiary) 75%);
+  background: linear-gradient(
+    90deg, 
+    var(--bg-tertiary) 25%, 
+    var(--bg-elevated) 45%, 
+    var(--bg-tertiary) 65%
+  );
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 20px var(--red-glow);
+  border-color: var(--red-sos);
 }
 
 /* ── Glassmorphism ── */
