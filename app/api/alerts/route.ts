@@ -1,19 +1,24 @@
 import { getAuthenticatedUser } from '@/lib/auth-server';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { apiSuccess, apiError } from '@/lib/utils/api';
+import { alertCreateSchema } from '@/lib/validations/alerts';
 
 export async function POST(req: NextRequest) {
   try {
     const { user, supabase } = await getAuthenticatedUser();
     if (!user || !supabase) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const body = await req.json();
     
-    // Basic validation
-    if (!body.location_lat || !body.location_lng || !body.emergency_type) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    // Zod validation
+    const validation = alertCreateSchema.safeParse(body);
+    if (!validation.success) {
+      return apiError(validation.error.errors[0].message, 400);
     }
+
+    const data_input = validation.data;
 
     const getPriority = (type: string): 'low' | 'medium' | 'high' | 'critical' => {
       switch (type) {
@@ -26,17 +31,17 @@ export async function POST(req: NextRequest) {
       }
     };
 
-    const priority = getPriority(body.emergency_type);
+    const priority = getPriority(data_input.emergency_type);
 
     const { data, error: insertError } = await supabase
       .from('alerts')
       .insert({ 
         triggered_by: user.id, 
-        location_lat: body.location_lat,
-        location_lng: body.location_lng,
-        emergency_type: body.emergency_type,
-        description: body.description,
-        routing_mode: body.routing_mode || 'cloud',
+        location_lat: data_input.location_lat,
+        location_lng: data_input.location_lng,
+        emergency_type: data_input.emergency_type,
+        description: data_input.description,
+        routing_mode: data_input.routing_mode,
         status: 'pending',
         priority
       })
@@ -45,14 +50,14 @@ export async function POST(req: NextRequest) {
 
     if (insertError) {
       console.error('Alert insert error:', insertError);
-      return NextResponse.json({ error: insertError.message }, { status: 500 });
+      return apiError(insertError.message, 500);
     }
 
     if (!data) {
-      return NextResponse.json({ error: 'Failed to create alert record' }, { status: 500 });
+      return apiError('Failed to create alert record', 500);
     }
 
-    // Log the action (non-blocking, don't crash if log fails)
+    // Log the action (non-blocking)
     try {
       await supabase.from('logs').insert({
         alert_id: data.id,
@@ -66,16 +71,16 @@ export async function POST(req: NextRequest) {
       console.error('Logging error (non-fatal):', logErr);
     }
 
-    return NextResponse.json({ data }, { status: 201 });
+    return apiSuccess(data, 201, 'Alert created successfully');
   } catch (err: any) {
     console.error('Unexpected API error:', err);
-    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
+    return apiError(err.message || 'Internal Server Error', 500);
   }
 }
 
 export async function GET(req: NextRequest) {
   const { user, supabase } = await getAuthenticatedUser();
-  if (!user || !supabase) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!user || !supabase) return apiError('Unauthorized', 401);
 
   const { searchParams } = new URL(req.url);
   const mine = searchParams.get('mine');
@@ -93,7 +98,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await query.order('created_at', { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError(error.message, 500);
 
-  return NextResponse.json({ data });
+  return apiSuccess(data);
 }
