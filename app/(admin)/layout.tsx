@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { NetworkBadge } from '@/components/shared/NetworkBadge';
 import { Zap, LayoutDashboard, AlertCircle, Shield, Users, ScrollText, Settings, LogOut } from 'lucide-react';
-import { clsx } from 'clsx';
+import { PageTransition } from '@/components/shared/PageTransition';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -93,7 +93,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
         
         <div className="p-8">
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </div>
       </main>
     </div>

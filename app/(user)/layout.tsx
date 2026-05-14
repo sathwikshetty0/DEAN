@@ -8,6 +8,8 @@ import { NetworkBadge } from '@/components/shared/NetworkBadge';
 import { Zap, LayoutDashboard, History, User, LogOut, Bell } from 'lucide-react';
 import { clsx } from 'clsx';
 
+import { PageTransition } from '@/components/shared/PageTransition';
+
 export default function UserLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { profile, signOut } = useAuth();
@@ -61,7 +63,9 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
       </nav>
 
       <main className="flex-1 pt-24 px-6 pb-12 max-w-7xl mx-auto w-full">
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </main>
     </div>
   );
