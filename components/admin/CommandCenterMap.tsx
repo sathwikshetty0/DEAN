@@ -11,74 +11,7 @@ import { Shield, AlertCircle, User, Zap, Navigation as NavIcon } from 'lucide-re
 import { renderToStaticMarkup } from 'react-dom/server';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Fix for default markers
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-L.Marker.prototype.options.icon = DefaultIcon;
-
-const ICON_CACHE: Record<string, L.DivIcon> = {};
-
-const getCustomIcon = (type: string, status: string) => {
-  const key = `${type}-${status}`;
-  if (ICON_CACHE[key]) return ICON_CACHE[key];
-
-  const color = status === 'pending' ? '#FF2D55' : '#F59E0B';
-  const isPending = status === 'pending';
-  
-  const icon = L.divIcon({
-    html: `
-      <div class="relative flex items-center justify-center">
-        ${isPending ? `
-          <div class="absolute w-12 h-12 bg-[#FF2D55]/30 rounded-full animate-ping opacity-75"></div>
-          <div class="absolute w-8 h-8 bg-[#FF2D55]/40 rounded-full animate-pulse"></div>
-        ` : ''}
-        <div class="relative z-10" style="background-color: ${color}; width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); transform: rotate(45deg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-          <div style="transform: rotate(-45deg); color: white; font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
-            ${type === 'medical' ? '🏥' : type === 'fire' ? '🔥' : type === 'accident' ? '🚗' : '🚨'}
-          </div>
-        </div>
-        <div class="absolute -bottom-1 w-2 h-2 bg-[#0A0E1A] rotate-45"></div>
-      </div>
-    `,
-    className: 'custom-marker',
-    iconSize: [48, 48],
-    iconAnchor: [24, 48],
-  });
-
-  ICON_CACHE[key] = icon;
-  return icon;
-};
-
-const getResponderIcon = (isAvailable: boolean) => {
-  const key = `responder-${isAvailable}`;
-  if (ICON_CACHE[key]) return ICON_CACHE[key];
-
-  const color = isAvailable ? '#10B981' : '#3B82F6';
-  const icon = L.divIcon({
-    html: `
-      <div class="relative flex items-center justify-center">
-        ${isAvailable ? `
-          <div class="absolute w-10 h-10 bg-[#10B981]/20 rounded-full animate-ping"></div>
-        ` : ''}
-        <div style="background-color: ${color}; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 6px 15px -3px rgba(0,0,0,0.4); transition: all 0.3s ease;">
-          <div style="font-size: 16px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">🦺</div>
-        </div>
-        ${isAvailable ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-[#10B981] border-2 border-[#0A0E1A] rounded-full"></div>' : ''}
-      </div>
-    `,
-    className: 'responder-marker',
-    iconSize: [38, 38],
-    iconAnchor: [19, 19],
-  });
-
-  ICON_CACHE[key] = icon;
-  return icon;
-};
-
+import { useEmergencyMap } from '@/hooks/useEmergencyMap';
 
 interface MapUpdaterProps {
   bounds?: L.LatLngBoundsExpression;
@@ -96,6 +29,7 @@ const MapUpdater = ({ bounds }: MapUpdaterProps) => {
 
 export const CommandCenterMap = () => {
   const supabase = createClient();
+  const { responderMarkerIcon, emergencyMarkerIcon } = useEmergencyMap();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [responders, setResponders] = useState<Profile[]>([]);
   const [bounds, setBounds] = useState<L.LatLngBoundsExpression | undefined>(undefined);
@@ -195,7 +129,7 @@ export const CommandCenterMap = () => {
               html: `<div class="w-20 h-20 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>`,
               iconSize: [80, 80],
               iconAnchor: [40, 40],
-            }) : getCustomIcon(alert.emergency_type, alert.status)}
+            }) : emergencyMarkerIcon!(alert.emergency_type, alert.status)}
           >
             {!isHeatmap && (
               <Popup className="custom-popup" offset={[0, -20]}>
@@ -232,7 +166,7 @@ export const CommandCenterMap = () => {
             <Marker 
               key={resp.id} 
               position={[resp.location_lat, resp.location_lng]}
-              icon={getResponderIcon(resp.is_available)}
+              icon={responderMarkerIcon!(resp.is_available)}
             >
 
               <Popup className="custom-popup">

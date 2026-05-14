@@ -4,20 +4,7 @@ import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 
-// Fix for default marker icons in Leaflet + Next.js
-const userIcon = L.divIcon({
-  className: 'custom-div-icon',
-  html: `<div style="background-color: #FF2D55; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px #FF2D55;"></div>`,
-  iconSize: [12, 12],
-  iconAnchor: [6, 6],
-});
-
-const responderIcon = L.divIcon({
-  className: 'custom-div-icon',
-  html: `<div style="background-color: #3B82F6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px #3B82F6;"></div>`,
-  iconSize: [12, 12],
-  iconAnchor: [6, 6],
-});
+import { useEmergencyMap } from '@/hooks/useEmergencyMap';
 
 function MapRecenter({ coords }: { coords: [number, number][] }) {
   const map = useMap();
@@ -38,6 +25,8 @@ interface AlertMapInnerProps {
 }
 
 const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) => {
+  const { userIcon, responderIcon } = useEmergencyMap();
+  
   const coords: [number, number][] = [[userLocation.lat, userLocation.lng]];
   if (responderLocation) {
     coords.push([responderLocation.lat, responderLocation.lng]);
