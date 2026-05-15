@@ -4,34 +4,48 @@ import { useState, useEffect, useCallback } from 'react';
 import { getCurrentPosition, watchPosition, clearWatch, GeoPosition, calculateDistance } from '@/lib/utils/geolocation';
 
 export const useGeolocation = (watch = false) => {
-  const [position, setPosition] = useState<GeoPosition | null>(null);
+  const [position, setPosition] = useState<GeoPosition | null>(() => {
+    // Load last known position from localStorage on init
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dean_last_pos');
+      return saved ? JSON.parse(saved) : null;
+    }
+    return null;
+  });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const updatePosition = useCallback((pos: GeoPosition) => {
+    setPosition(pos);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('dean_last_pos', JSON.stringify(pos));
+    }
+  }, []);
 
   const requestLocation = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const pos = await getCurrentPosition();
-      setPosition(pos);
+      updatePosition(pos);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to get location';
       setError(message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [updatePosition]);
 
   useEffect(() => {
     if (!watch) return;
 
     let watchId: number | null = null;
-    let lastPos: GeoPosition | null = null;
+    let lastPos: GeoPosition | null = position;
     
     const startWatch = async () => {
       try {
         const pos = await getCurrentPosition();
-        setPosition(pos);
+        updatePosition(pos);
         lastPos = pos;
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Failed to get location';
@@ -42,7 +56,7 @@ export const useGeolocation = (watch = false) => {
         (pos) => {
           // Only update if moved more than 5 meters or if no last position
           if (!lastPos || calculateDistance(lastPos.lat, lastPos.lng, pos.lat, pos.lng) > 0.005) {
-            setPosition(pos);
+            updatePosition(pos);
             lastPos = pos;
           }
         },
@@ -55,7 +69,7 @@ export const useGeolocation = (watch = false) => {
     return () => {
       clearWatch(watchId);
     };
-  }, [watch]);
+  }, [watch, updatePosition]);
 
   return { position, error, loading, requestLocation };
 };
