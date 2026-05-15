@@ -17,6 +17,41 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
+export default function ProfilePage() {
+  const { profile, loading, updateProfile } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [shakeThreshold, setShakeThreshold] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return parseInt(localStorage.getItem('dean_shake_threshold') || '15');
+    }
+    return 15;
+  });
+
+  // Save threshold to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem('dean_shake_threshold', shakeThreshold.toString());
+  }, [shakeThreshold]);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: profile?.name || '',
+      phone: profile?.phone || '',
+    },
+  });
+
+  const onSubmit = async (data: ProfileFormValues) => {
+    setSaving(true);
+    try {
+      await updateProfile(data);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      toast.error('Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading || !profile) {
     return (
       <div className="max-w-2xl mx-auto space-y-8 animate-pulse">
@@ -147,6 +182,43 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
               </div>
             </motion.div>
           )}
+
+          {/* Safety Settings */}
+          <div className="space-y-6 pt-4 border-t border-[var(--border-default)]">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-muted)] ml-1 flex items-center gap-2">
+              <Shield className="w-4 h-4 text-sos" /> Safety Features
+            </h3>
+            
+            <div className="space-y-4 bg-[var(--bg-tertiary)]/50 p-6 rounded-2xl border border-[var(--border-default)]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-bold">Shake to SOS</div>
+                  <div className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mt-1">Automatic emergency trigger</div>
+                </div>
+                <div className="text-xs font-black text-sos">ACTIVE</div>
+              </div>
+              
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">Sensitivity</span>
+                  <span className="text-[10px] font-black text-sos uppercase">{shakeThreshold < 10 ? 'High' : shakeThreshold < 20 ? 'Medium' : 'Low'}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="5" 
+                  max="35" 
+                  step="1"
+                  value={shakeThreshold}
+                  onChange={(e) => setShakeThreshold(parseInt(e.target.value))}
+                  className="w-full h-1.5 bg-[var(--bg-tertiary)] rounded-full appearance-none cursor-pointer accent-sos"
+                />
+                <div className="flex justify-between text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest">
+                  <span>More Sensitive</span>
+                  <span>Less Sensitive</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <motion.button
             whileHover={{ scale: 1.01 }}
