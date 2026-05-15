@@ -41,47 +41,65 @@ export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
                 </td>
               </tr>
             ) : (
-              alerts.map((alert) => (
-                <tr key={alert.id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="px-6 py-4 font-bold text-xs text-[var(--red-sos)]">{alert.alert_code}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 text-xs font-medium">
-                      <span>{getEmergencyIcon(alert.emergency_type)}</span>
-                      <span className="capitalize">{alert.emergency_type}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-xs font-bold">{(alert.triggered_by as Partial<Profile> | undefined)?.name ?? '—'}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className={clsx(
-                      'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold border',
-                      alert.routing_mode === 'cloud'
-                        ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                        : 'bg-orange-500/10 text-orange-400 border-orange-500/20'
-                    )}>
-                      {alert.routing_mode === 'cloud' ? <Zap className="w-3 h-3" /> : <Navigation className="w-3 h-3" />}
-                      {alert.routing_mode.toUpperCase()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4"><StatusPill status={alert.status} /></td>
-                  <td className="px-6 py-4 text-xs font-medium text-[var(--text-secondary)]">
-                    {(alert.assigned_responder as Partial<Profile> | undefined)?.name ?? '—'}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-xs font-medium">{formatDate(alert.created_at)}</div>
-                    <div className="text-[10px] text-[var(--text-muted)]">{formatTime(alert.created_at)}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => onView?.(alert.id)}
-                      className="p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--red-sos)] hover:border-[var(--red-sos)]/30 transition-all"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))
+              alerts.map((alert) => {
+                const isPending = alert.status === 'pending';
+                const isCritical = alert.priority === 'critical';
+                
+                return (
+                  <tr 
+                    key={alert.id} 
+                    className={clsx(
+                      "transition-all duration-300 group relative",
+                      isPending && "bg-sos/[0.03] hover:bg-sos/[0.05]",
+                      !isPending && "hover:bg-white/[0.02]",
+                      isCritical && isPending && "after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-sos animate-pulse"
+                    )}
+                  >
+                    <td className="px-6 py-4 font-bold text-xs text-[var(--red-sos)]">
+                      <div className="flex items-center gap-2">
+                        {isPending && <div className="w-1.5 h-1.5 rounded-full bg-sos animate-ping" />}
+                        {alert.alert_code}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-xs font-medium">
+                        <span>{getEmergencyIcon(alert.emergency_type)}</span>
+                        <span className="capitalize">{alert.emergency_type}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-xs font-bold">{(alert.triggered_by as Partial<Profile> | undefined)?.name ?? '—'}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className={clsx(
+                        'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold border',
+                        alert.routing_mode === 'cloud'
+                          ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                          : 'bg-orange-500/10 text-orange-400 border-orange-500/20'
+                      )}>
+                        {alert.routing_mode === 'cloud' ? <Zap className="w-3 h-3" /> : <Navigation className="w-3 h-3" />}
+                        {alert.routing_mode.toUpperCase()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4"><StatusPill status={alert.status} /></td>
+                    <td className="px-6 py-4 text-xs font-medium text-[var(--text-secondary)]">
+                      {(alert.assigned_responder as Partial<Profile> | undefined)?.name ?? '—'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-xs font-medium">{formatDate(alert.created_at)}</div>
+                      <div className="text-[10px] text-[var(--text-muted)]">{formatTime(alert.created_at)}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => onView?.(alert.id)}
+                        className="p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--red-sos)] hover:border-[var(--red-sos)]/30 transition-all shadow-sm active:scale-95"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
