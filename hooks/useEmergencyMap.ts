@@ -64,6 +64,34 @@ export const useEmergencyMap = () => {
     };
   }, []);
 
+  const responderIcon = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return L.divIcon({
+      html: `
+        <div style="background-color: #3B82F6; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 15px rgba(59,130,246,0.5);">
+          <div style="font-size: 14px;">🦺</div>
+        </div>
+      `,
+      className: 'responder-icon',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+  }, []);
+
+  const alertIcon = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return L.divIcon({
+      html: `
+        <div style="background-color: #FF2D55; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 15px rgba(255,45,85,0.5); transform: rotate(45deg);">
+          <div style="transform: rotate(-45deg); font-size: 14px;">🚨</div>
+        </div>
+      `,
+      className: 'alert-icon',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+  }, []);
+
   return {
     userIcon,
     responderIcon,

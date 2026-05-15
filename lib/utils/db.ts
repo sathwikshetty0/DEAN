@@ -10,7 +10,7 @@ export interface OfflineAlert {
   type: string;
   location: { lat: number; lng: number };
   timestamp: string;
-  synced: boolean;
+  synced: 0 | 1;
   metadata?: any;
 }
 
@@ -18,7 +18,7 @@ export interface OfflineLog {
   id: string;
   action: string;
   timestamp: string;
-  synced: boolean;
+  synced: 0 | 1;
   data?: any;
 }
 
@@ -61,7 +61,7 @@ export const saveOfflineAlert = async (alert: OfflineAlert) => {
 export const getUnsyncedAlerts = async (): Promise<OfflineAlert[]> => {
   const db = await getDB();
   if (!db) return [];
-  return db.getAllFromIndex(STORE_NAME, 'synced', false as any); 
+  return db.getAllFromIndex(STORE_NAME, 'synced', 0); 
 };
 
 export const saveOfflineLog = async (log: OfflineLog) => {
@@ -73,7 +73,7 @@ export const saveOfflineLog = async (log: OfflineLog) => {
 export const getUnsyncedLogs = async (): Promise<OfflineLog[]> => {
   const db = await getDB();
   if (!db) return [];
-  return db.getAllFromIndex(LOG_STORE, 'synced', false as any);
+  return db.getAllFromIndex(LOG_STORE, 'synced', 0);
 };
 
 export const markAlertAsSynced = async (id: string) => {
@@ -81,7 +81,7 @@ export const markAlertAsSynced = async (id: string) => {
   if (!db) return;
   const alert = await db.get(STORE_NAME, id);
   if (alert) {
-    alert.synced = true;
+    alert.synced = 1;
     await db.put(STORE_NAME, alert);
   }
 };
@@ -91,7 +91,7 @@ export const clearSyncedAlerts = async () => {
   if (!db) return;
   const alerts = await db.getAll(STORE_NAME);
   for (const alert of alerts) {
-    if (alert.synced) {
+    if (alert.synced === 1) {
       await db.delete(STORE_NAME, alert.id);
     }
   }
