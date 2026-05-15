@@ -9,10 +9,14 @@ const updateResponderSchema = z.object({
   is_available: z.boolean().optional(),
 });
 
+import { verifyAdmin } from '@/lib/utils/auth';
+import { apiSuccess } from '@/lib/utils/api';
+
 export async function GET(req: Request) {
+  const { error: authError } = await verifyAdmin();
+  if (authError) return authError;
+
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryParam = searchParams.get('q');
@@ -47,9 +51,10 @@ export async function GET(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const { error: authError } = await verifyAdmin();
+  if (authError) return authError;
+
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
     const body = await req.json();
@@ -64,7 +69,7 @@ export async function PATCH(req: Request) {
 
     if (error) throw error;
 
-    return NextResponse.json({ data });
+    return apiSuccess(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });

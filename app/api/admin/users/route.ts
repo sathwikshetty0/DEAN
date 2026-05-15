@@ -1,22 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { verifyAdmin } from '@/lib/utils/auth';
+import { apiSuccess } from '@/lib/utils/api';
+
 export async function GET(req: NextRequest) {
+  const { error: authError } = await verifyAdmin();
+  if (authError) return authError;
+
   const supabase = createClient();
-  
-  // Verify Admin Role
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
 
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') ?? '1', 10);
@@ -44,20 +36,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const { error: authError } = await verifyAdmin();
+  if (authError) return authError;
+
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  // Verify Admin Role
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
 
   const body = await req.json();
   const { id, ...updates } = body;
@@ -73,5 +55,5 @@ export async function PATCH(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  return NextResponse.json(data);
+  return apiSuccess(data);
 }
