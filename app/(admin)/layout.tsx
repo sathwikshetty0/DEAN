@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { NetworkBadge } from '@/components/shared/NetworkBadge';
 import { Zap, LayoutDashboard, AlertCircle, Shield, Users, ScrollText, Settings, LogOut } from 'lucide-react';
 import { PageTransition } from '@/components/shared/PageTransition';
+import { clsx } from 'clsx';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
