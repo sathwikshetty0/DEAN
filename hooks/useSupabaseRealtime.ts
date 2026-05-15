@@ -99,3 +99,26 @@ export const useResponderLocation = (alertId: string | undefined, onUpdate: (loc
     };
   }, [supabase, alertId, onUpdate]);
 };
+
+// GLOBAL — subscribes to responder availability changes
+export const useResponderAvailabilityStream = (onUpdate: (payload: any) => void) => {
+  const supabase = createClient();
+  
+  useEffect(() => {
+    const channel = supabase
+      .channel('responder-availability')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'profiles',
+        filter: 'role=eq.responder'
+      }, (payload) => {
+        onUpdate(payload);
+      })
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, onUpdate]);
+};
