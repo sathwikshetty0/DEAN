@@ -20,6 +20,8 @@ import { Shield, Clock, ChevronRight, Info, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
+import { getUnsyncedAlerts } from '@/lib/utils/db';
+
 export default function UserDashboard() {
   const { profile, user } = useAuth();
   const { mode } = useNetwork();
@@ -33,6 +35,19 @@ export default function UserDashboard() {
   const [responderPos, setResponderPos] = useState<{ lat: number; lng: number } | null>(null);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
   const [nearbyResponders, setNearbyResponders] = useState<{ id: string; name: string; zone: string; skills: string[] }[]>([]);
+  const [unsyncedCount, setUnsyncedCount] = useState(0);
+
+  // Check for unsynced alerts
+  useEffect(() => {
+    const checkUnsynced = async () => {
+      const unsynced = await getUnsyncedAlerts();
+      setUnsyncedCount(unsynced.length);
+    };
+    checkUnsynced();
+    // Re-check periodically
+    const interval = setInterval(checkUnsynced, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Auto-request location on mount
   useEffect(() => {
@@ -243,6 +258,35 @@ export default function UserDashboard() {
               className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-3xl p-8 shadow-2xl relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--red-sos)]/50 to-transparent" />
+
+              <AnimatePresence>
+                {unsyncedCount > 0 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="mb-6 overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                          <Clock className="w-4 h-4 text-orange-400" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-orange-400">Offline Drafts Pending</div>
+                          <div className="text-[10px] text-orange-400/60">{unsyncedCount} alerts waiting for sync</div>
+                        </div>
+                      </div>
+                      <Link 
+                        href="/dashboard/history" 
+                        className="text-[10px] font-black uppercase tracking-widest text-orange-400 hover:underline"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className="space-y-8">
                 <EmergencyTypeSelector selected={selectedType} onChange={setSelectedType} />
