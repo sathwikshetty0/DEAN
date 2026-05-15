@@ -33,11 +33,35 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-alerts') {
-    event.waitUntil(syncAlerts());
+    event.waitUntil(syncAlertsWithRetry());
   }
 });
 
+async function syncAlertsWithRetry(retries = 3) {
+  try {
+    await syncAlerts();
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Sync failed, retrying... (${retries} left)`);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return syncAlertsWithRetry(retries - 1);
+    }
+    throw error;
+  }
+}
+
 async function syncAlerts() {
-  console.log('Background Sync: Synchronizing alerts...');
-  // Logic to read from IndexedDB and send to API
+  console.log('[SW] Background Sync: Starting synchronization...');
+  
+  // Note: For a production app, we would use a library or a shared utility 
+  // to access IndexedDB here. This is a placeholder for the logic 
+  // implemented in the frontend's OfflineSync component.
+  
+  // Broadcast to open tabs that sync is starting
+  const clients = await self.clients.matchAll();
+  clients.forEach(client => {
+    client.postMessage({ type: 'SYNC_STARTED' });
+  });
+
+  return Promise.resolve();
 }
