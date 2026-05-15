@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { clsx } from 'clsx';
 import { useNetwork } from '@/context/NetworkContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, WifiOff, RefreshCw } from 'lucide-react';

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { AlertCircle, CheckCircle2, Clock, MapPin, XCircle } from 'lucide-react';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
