@@ -9,9 +9,13 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      /**
+       * User profiles extending Supabase Auth data.
+       * Contains roles, responder skills, and availability status.
+       */
       profiles: {
         Row: {
-          id: string
+          id: string // Matches Supabase Auth UUID
           name: string
           email: string
           phone: string | null
