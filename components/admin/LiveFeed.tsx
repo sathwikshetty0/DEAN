@@ -37,7 +37,19 @@ export const LiveFeed = ({ logs, onSelectAlert }: LiveFeedProps) => {
       <div className="divide-y divide-[var(--border-default)] max-h-[400px] overflow-y-auto">
         <AnimatePresence initial={false}>
           {logs.length === 0 ? (
-            <div className="p-8 text-center text-[var(--text-muted)] text-sm">No activity yet.</div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="p-12 text-center space-y-3"
+            >
+              <div className="w-12 h-12 bg-[var(--bg-tertiary)] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[var(--border-default)]">
+                <Activity className="w-6 h-6 text-[var(--text-muted)] opacity-50" />
+              </div>
+              <div className="text-sm font-bold text-[var(--text-primary)]">No Active Feed</div>
+              <div className="text-[11px] text-[var(--text-muted)] max-w-[200px] mx-auto leading-relaxed">
+                System events and emergency alerts will appear here in real-time.
+              </div>
+            </motion.div>
           ) : (
             logs.map((log) => {
               const style = getLogStyle(log.action);
