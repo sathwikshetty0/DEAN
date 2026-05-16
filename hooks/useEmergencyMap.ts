@@ -9,9 +9,14 @@ export const useEmergencyMap = () => {
     if (typeof window === 'undefined') return null;
     return L.divIcon({
       className: 'custom-div-icon',
-      html: `<div style="background-color: #FF2D55; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px #FF2D55;"></div>`,
-      iconSize: [12, 12],
-      iconAnchor: [6, 6],
+      html: `
+        <div class="relative flex items-center justify-center">
+          <div class="absolute w-10 h-10 bg-[#FF2D55]/30 rounded-full animate-ping"></div>
+          <div style="background-color: #FF2D55; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 20px rgba(255,45,85,0.8); z-index: 10;"></div>
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
     });
   }, []);
 
