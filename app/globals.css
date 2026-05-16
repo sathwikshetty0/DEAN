@@ -241,3 +241,16 @@ h1, h2, h3, h4, h5, h6, .font-syne {
   background-color: var(--bg-tertiary) !important;
   color: var(--text-primary) !important;
 }
+
+@keyframes mesh-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, -2%) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

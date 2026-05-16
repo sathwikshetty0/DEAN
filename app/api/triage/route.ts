@@ -1,42 +1,37 @@
 import { NextResponse } from 'next/server';
+import { triageDescription } from '@/lib/utils/triage';
+import { EmergencyType } from '@/lib/types/app.types';
 
 export async function POST(req: Request) {
   try {
     const { description, originalType } = await req.json();
+    const type = (originalType ?? 'medical') as EmergencyType;
 
-    if (!description) {
-      return NextResponse.json({ type: originalType, confidence: 1 });
+    if (!description?.trim()) {
+      return NextResponse.json({
+        suggestedType: type,
+        confidence: 1,
+        severity: 'medium',
+        priorityScore: 2,
+        keywords: [],
+        isOverridden: false,
+        suggestedActions: [],
+      });
     }
 
-    const text = description.toLowerCase();
-    let suggestedType = originalType;
-    let confidence = 0.6;
+    const result = triageDescription(description, type);
 
-    // Simulated AI Keyword Matching
-    if (text.includes('fire') || text.includes('smoke') || text.includes('burning')) {
-      suggestedType = 'fire';
-      confidence = 0.95;
-    } else if (text.includes('heart') || text.includes('breath') || text.includes('bleed') || text.includes('unconscious') || text.includes('medical')) {
-      suggestedType = 'medical';
-      confidence = 0.98;
-    } else if (text.includes('crash') || text.includes('accident') || text.includes('hit') || text.includes('collision')) {
-      suggestedType = 'accident';
-      confidence = 0.92;
-    } else if (text.includes('water') || text.includes('flood') || text.includes('rain') || text.includes('drown')) {
-      suggestedType = 'flood';
-      confidence = 0.88;
-    } else if (text.includes('thief') || text.includes('gun') || text.includes('fight') || text.includes('robbery') || text.includes('crime')) {
-      suggestedType = 'crime';
-      confidence = 0.94;
-    }
-
-    return NextResponse.json({ 
-      suggestedType, 
-      confidence,
-      originalType,
-      isOverridden: suggestedType !== originalType 
+    return NextResponse.json({
+      suggestedType: result.suggestedType,
+      confidence: result.confidence,
+      severity: result.severity,
+      priorityScore: result.priorityScore,
+      keywords: result.keywords,
+      originalType: type,
+      isOverridden: result.isOverridden,
+      suggestedActions: result.suggestedActions,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to triage' }, { status: 500 });
   }
 }

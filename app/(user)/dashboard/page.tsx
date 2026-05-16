@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNetwork } from '@/context/NetworkContext';
 import { useAlerts } from '@/context/AlertContext';
 import { useAlertStatusStream, useResponderLocation } from '@/hooks/useSupabaseRealtime';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { useShakeSOS } from '@/hooks/useShakeSOS';
+import { useVoiceSOS } from '@/hooks/useVoiceSOS';
+import { useKeyboardSOS } from '@/hooks/useKeyboardSOS';
 import { createClient } from '@/lib/supabase/client';
 import { SOSButton } from '@/components/sos/SOSButton';
 import { EmergencyTypeSelector } from '@/components/sos/EmergencyTypeSelector';
 import { LocationCapture } from '@/components/sos/LocationCapture';
+import { ShakeCountdown } from '@/components/sos/ShakeCountdown';
 import { AlertStatusDisplay } from '@/components/alert/AlertStatus';
 import { StatusPill } from '@/components/shared/StatusPill';
 import { EmergencyType, Alert } from '@/lib/types/app.types';
@@ -19,6 +23,7 @@ import { toast } from 'react-hot-toast';
 import { Shield, Clock, ChevronRight, Info, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { clsx } from 'clsx';
 
 import { getUnsyncedAlerts } from '@/lib/utils/db';
 
@@ -28,6 +33,7 @@ export default function UserDashboard() {
   const { activeAlert, setActiveAlert } = useAlerts();
   const { position, loading: geoLoading, error: geoError, requestLocation } = useGeolocation();
   const supabase = createClient();
+  const sosRef = useRef<HTMLDivElement>(null);
 
   const [selectedType, setSelectedType] = useState<EmergencyType>('medical');
   const [description, setDescription] = useState('');
@@ -36,6 +42,8 @@ export default function UserDashboard() {
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
   const [nearbyResponders, setNearbyResponders] = useState<{ id: string; name: string; zone: string; skills: string[] }[]>([]);
   const [unsyncedCount, setUnsyncedCount] = useState(0);
+  const [shakeCountdown, setShakeCountdown] = useState<number | null>(null);
+  const [triageHints, setTriageHints] = useState<string[]>([]);
 
   // Check for unsynced alerts
   useEffect(() => {
@@ -53,6 +61,15 @@ export default function UserDashboard() {
   useEffect(() => {
     requestLocation();
   }, [requestLocation]);
+
+  // PWA / quick-link: scroll to SOS panel
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('sos') === '1' && sosRef.current) {
+      sosRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, []);
 
   // Fetch recent alerts
   useEffect(() => {
@@ -100,13 +117,14 @@ export default function UserDashboard() {
     setResponderPos(pos);
   });
 
-  const handleSOS = async () => {
+  const handleSOS = useCallback(async () => {
     if (!position) {
       toast.error('Location not available. Please enable GPS.');
       return;
     }
 
     setSending(true);
+    setShakeCountdown(null);
 
     let finalType = selectedType;
 
@@ -124,8 +142,14 @@ export default function UserDashboard() {
           if (triageData.isOverridden) {
             toast.success(`AI refined alert to: ${finalType.toUpperCase()}`, { icon: '🤖' });
           }
+          if (triageData.severity === 'critical') {
+            toast('Critical priority — responders notified immediately', { icon: '⚡' });
+          }
+          if (triageData.suggestedActions?.length) {
+            setTriageHints(triageData.suggestedActions);
+          }
         }
-      } catch (e) {
+      } catch {
         console.error('Triage failed, using original type');
       }
     }
@@ -170,33 +194,30 @@ export default function UserDashboard() {
         setSending(false);
       }
     }
-  };
+  }, [position, selectedType, description, mode, profile?.id, setActiveAlert]);
 
-  // Shake to SOS Detection
+  const startEmergencyCountdown = useCallback(() => {
+    if (sending || activeAlert || shakeCountdown !== null) return;
+    setShakeCountdown(3);
+    toast('Emergency countdown started — cancel or wait', { icon: '⚠️' });
+  }, [sending, activeAlert, shakeCountdown]);
+
   useEffect(() => {
-    let lastX: number, lastY: number, lastZ: number;
-    let threshold = 15; // adjust as needed
-    
-    const handleMotion = (e: DeviceMotionEvent) => {
-      const acc = e.accelerationIncludingGravity;
-      if (!acc) return;
-      
-      const { x, y, z } = acc;
-      if (lastX !== undefined) {
-        const delta = Math.abs(x! - lastX) + Math.abs(y! - lastY) + Math.abs(z! - lastZ);
-        if (delta > threshold && !sending && !activeAlert) {
-           toast.success('Shake detected! Hold SOS to confirm.', { icon: '📳' });
-           // Could auto-trigger after a countdown here
-        }
-      }
-      lastX = x!; lastY = y!; lastZ = z!;
-    };
-
-    if (typeof window !== 'undefined' && 'DeviceMotionEvent' in window) {
-      window.addEventListener('devicemotion', handleMotion);
+    if (shakeCountdown === null) return;
+    if (shakeCountdown === 0) {
+      handleSOS();
+      return;
     }
-    return () => window.removeEventListener('devicemotion', handleMotion);
-  }, [sending, activeAlert]);
+    const t = setTimeout(() => setShakeCountdown((c) => (c !== null && c > 0 ? c - 1 : null)), 1000);
+    return () => clearTimeout(t);
+  }, [shakeCountdown, handleSOS]);
+
+  useShakeSOS(startEmergencyCountdown, 18);
+  useKeyboardSOS(startEmergencyCountdown, !activeAlert && !sending);
+  const { isListening, toggleListening, supported: voiceSupported } = useVoiceSOS(
+    startEmergencyCountdown,
+    !activeAlert && !sending
+  );
 
   const handleCancel = async () => {
     if (!activeAlert || activeAlert.id === 'local-temp') {
@@ -230,6 +251,7 @@ export default function UserDashboard() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <ShakeCountdown seconds={shakeCountdown} onCancel={() => setShakeCountdown(null)} />
       {/* Main Content */}
       <div className="lg:col-span-2 space-y-8">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -252,6 +274,7 @@ export default function UserDashboard() {
           {!activeAlert ? (
             <motion.div
               key="sos-interface"
+              ref={sosRef}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -312,6 +335,19 @@ export default function UserDashboard() {
                   />
                   <div className="text-right text-[10px] text-[var(--text-muted)]">{description.length}/500</div>
                 </div>
+
+                {triageHints.length > 0 && (
+                  <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 space-y-1">
+                    <p className="font-black uppercase tracking-widest text-[10px] text-blue-400">AI suggested actions</p>
+                    {triageHints.map((hint) => (
+                      <p key={hint}>• {hint}</p>
+                    ))}
+                  </div>
+                )}
+
+                <p className="text-center text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest">
+                  Shift+S · Shake phone · Say &quot;SOS&quot; or &quot;help&quot;
+                </p>
 
                 {/* SOS Button */}
                 <div className="flex justify-center pt-4">
@@ -418,11 +454,30 @@ export default function UserDashboard() {
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-8 left-8 z-[50] w-14 h-14 bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-full flex items-center justify-center shadow-2xl hover:border-sos/50 group transition-all"
-        onClick={() => toast.success('Voice SOS listening enabled', { icon: '🎙️' })}
+        type="button"
+        aria-pressed={isListening}
+        aria-label={isListening ? 'Stop voice SOS listening' : 'Start voice SOS listening'}
+        className={clsx(
+          'fixed bottom-8 left-8 z-[50] w-14 h-14 rounded-full flex items-center justify-center shadow-2xl group transition-all border',
+          isListening
+            ? 'bg-[var(--red-sos)]/20 border-[var(--red-sos)] animate-pulse'
+            : 'bg-[var(--bg-secondary)] border-[var(--border-default)] hover:border-[var(--red-sos)]/50',
+          !voiceSupported && 'opacity-40 pointer-events-none'
+        )}
+        onClick={toggleListening}
       >
-        <Mic className="w-6 h-6 text-[var(--text-muted)] group-hover:text-sos transition-colors" />
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[var(--bg-primary)] rounded-full" />
+        <Mic
+          className={clsx(
+            'w-6 h-6 transition-colors',
+            isListening ? 'text-[var(--red-sos)]' : 'text-[var(--text-muted)] group-hover:text-[var(--red-sos)]'
+          )}
+        />
+        <div
+          className={clsx(
+            'absolute -top-1 -right-1 w-3 h-3 border-2 border-[var(--bg-primary)] rounded-full',
+            isListening ? 'bg-[var(--red-sos)]' : 'bg-green-500'
+          )}
+        />
       </motion.button>
     </div>
   );
