@@ -142,7 +142,7 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
         onTouchEnd={endHold}
         disabled={loading}
         className={clsx(
-          "relative w-48 h-48 rounded-full flex flex-col items-center justify-center transition-all duration-300",
+          "relative w-48 h-48 rounded-full flex flex-col items-center justify-center transition-all duration-300 scanline",
           loading ? "bg-gray-800" : isHolding ? "bg-[#CC0033] shadow-[0_0_80px_rgba(255,45,85,0.8)]" : "bg-gradient-to-br from-[#FF2D55] via-[#E6294D] to-[#CC0033] shadow-[0_0_60px_rgba(255,45,85,0.4)]",
           "border-[12px] border-white/30 overflow-hidden group z-10"
         )}
