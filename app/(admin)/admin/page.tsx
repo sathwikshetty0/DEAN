@@ -23,7 +23,13 @@ const COLORS = ['#FF2D55', '#3B82F6', '#F59E0B', '#10B981', '#94A3B8', '#CC0033'
 
 export default function AdminOverview() {
   const supabase = createClient();
-  const [stats, setStats] = useState({ activeAlerts: 0, resolvedToday: 0, onlineResponders: 0, p2pEvents: 0 });
+  const [stats, setStats] = useState({ 
+    activeAlerts: 0, 
+    resolvedToday: 0, 
+    onlineResponders: 0, 
+    p2pEvents: 0,
+    resilienceScore: 0
+  });
   const [logs, setLogs] = useState<Log[]>([]);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string | null>(null);
@@ -53,11 +59,18 @@ export default function AdminOverview() {
         .from('profiles').select('*', { count: 'exact', head: true })
         .eq('role', 'responder').eq('is_available', true);
 
+      const active = activeCount ?? 0;
+      const resp = responders ?? 0;
+      
+      // Calculate Resilience Score: (Responders * 20) - (Active Alerts * 10) capped at 100
+      const score = Math.max(0, Math.min(100, (resp * 25) - (active * 15) + 50));
+
       setStats({
-        activeAlerts: activeCount ?? 0,
+        activeAlerts: active,
         resolvedToday: resolvedToday ?? 0,
-        onlineResponders: responders ?? 0,
+        onlineResponders: resp,
         p2pEvents: 14,
+        resilienceScore: score
       });
     };
 
@@ -248,7 +261,19 @@ export default function AdminOverview() {
               THREAT LEVEL: {stats.activeAlerts > 5 ? 'CRITICAL' : stats.activeAlerts > 2 ? 'ELEVATED' : 'STABLE'}
             </div>
           </div>
-          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="font-bold">Community Resilience</span>
+                <span className={`font-bold ${stats.resilienceScore > 70 ? 'text-green-500' : stats.resilienceScore > 40 ? 'text-orange-500' : 'text-sos'}`}>{stats.resilienceScore}%</span>
+              </div>
+              <div className="h-2 w-full bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-1000 ${stats.resilienceScore > 70 ? 'bg-green-500' : stats.resilienceScore > 40 ? 'bg-orange-500' : 'bg-sos'}`}
+                  style={{ width: `${stats.resilienceScore}%` }}
+                />
+              </div>
+            </div>
+
             {[
               { label: 'Real-time Gateway', val: '100%', ok: true },
               { label: 'Database Load', val: '4%', ok: true },
