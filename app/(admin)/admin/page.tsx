@@ -293,7 +293,6 @@ export default function AdminOverview() {
                 </div>
               </div>
             ))}
-          </div>
 
           <div className="pt-6 border-t border-[var(--border-default)]">
             <div className="flex items-center gap-3 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
