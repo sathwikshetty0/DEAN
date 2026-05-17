@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/context/AuthContext';
-import { Alert } from '@/lib/types/app.types';
+import { Alert, EmergencyType } from '@/lib/types/app.types';
 import { StatusPill } from '@/components/shared/StatusPill';
 import { getEmergencyIcon, formatDate, formatTime, getModeLabel } from '@/lib/utils/formatters';
 import { Clock, Filter, ChevronLeft, ChevronRight, Zap, Navigation } from 'lucide-react';
@@ -18,11 +18,25 @@ export default function HistoryPage() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState<EmergencyType | 'all'>('all');
 
-  const filteredAlerts = alerts.filter(alert => 
-    alert.alert_code.toLowerCase().includes(search.toLowerCase()) ||
-    alert.description?.toLowerCase().includes(search.toLowerCase())
-  );
+  const TYPE_CHIPS: { id: EmergencyType | 'all'; label: string }[] = [
+    { id: 'all', label: 'All types' },
+    { id: 'medical', label: 'Medical' },
+    { id: 'fire', label: 'Fire' },
+    { id: 'accident', label: 'Accident' },
+    { id: 'crime', label: 'Crime' },
+    { id: 'flood', label: 'Flood' },
+    { id: 'other', label: 'Other' },
+  ];
+
+  const filteredAlerts = alerts.filter((alert) => {
+    const matchesSearch =
+      alert.alert_code.toLowerCase().includes(search.toLowerCase()) ||
+      alert.description?.toLowerCase().includes(search.toLowerCase());
+    const matchesType = typeFilter === 'all' || alert.emergency_type === typeFilter;
+    return matchesSearch && matchesType;
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -65,6 +79,24 @@ export default function HistoryPage() {
                onChange={(e) => setSearch(e.target.value)}
                className="w-full bg-[var(--bg-secondary)] border border-[var(--border-default)] focus:border-sos/50 focus:ring-4 focus:ring-sos/10 rounded-2xl text-xs font-bold pl-11 pr-4 py-3.5 outline-none transition-all placeholder:text-[var(--text-muted)]/50"
              />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {TYPE_CHIPS.map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => setTypeFilter(chip.id)}
+                className={clsx(
+                  'px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-colors',
+                  typeFilter === chip.id
+                    ? 'bg-[var(--red-sos)]/15 border-[var(--red-sos)]/40 text-[var(--red-sos)]'
+                    : 'bg-[var(--bg-secondary)] border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                )}
+              >
+                {chip.label}
+              </button>
+            ))}
           </div>
 
           <select
