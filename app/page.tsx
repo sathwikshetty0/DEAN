@@ -5,6 +5,7 @@ import { Zap, Shield, Heart, Activity, ArrowRight, Wifi, Radio } from 'lucide-re
 import { useAuth } from '@/context/AuthContext';
 import { MeshBackground } from '@/components/landing/MeshBackground';
 import { LiveNetworkStats } from '@/components/landing/LiveNetworkStats';
+import { EmergencyHotlineBar } from '@/components/landing/EmergencyHotlineBar';
 import { motion } from 'framer-motion';
 
 const ROLES = [
@@ -170,7 +171,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="py-12 px-6 text-center text-[var(--text-muted)] text-sm border-t border-[var(--border-default)] mt-20">
+      <EmergencyHotlineBar />
+
+      <footer className="py-12 px-6 pb-24 text-center text-[var(--text-muted)] text-sm border-t border-[var(--border-default)] mt-20">
         <p>
           &copy; {new Date().getFullYear()} D-EAN — Decentralized Emergency Assistance Network. Built for
           Mangaluru.
