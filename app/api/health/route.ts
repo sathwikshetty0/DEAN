@@ -15,17 +15,24 @@ function formatUptime(ms: number): string {
 export async function GET() {
   const uptimeMs = Date.now() - startedAt;
 
-  return NextResponse.json({
-    status: 'ok',
-    service: 'D-EAN',
-    version: process.env.npm_package_version ?? '0.1.0',
-    timestamp: new Date().toISOString(),
-    uptime: formatUptime(uptimeMs),
-    network: {
-      cloud: true,
-      p2pReady: true,
+  return NextResponse.json(
+    {
+      status: 'ok',
+      service: 'D-EAN',
+      version: process.env.npm_package_version ?? '0.1.0',
+      timestamp: new Date().toISOString(),
+      uptime: formatUptime(uptimeMs),
+      network: {
+        cloud: true,
+        p2pReady: true,
+      },
     },
-  });
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=5, stale-while-revalidate=10',
+      },
+    }
+  );
 }
 
 export async function HEAD() {
