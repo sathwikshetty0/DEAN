@@ -1,22 +1,25 @@
-import { createClient } from '@/lib/supabase/server';
+import { getAuthenticatedUser } from '@/lib/auth-server';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const AlertSyncSchema = z.object({
-  alerts: z.array(z.object({
-    location_lat: z.number(),
-    location_lng: z.number(),
-    emergency_type: z.string(),
-    description: z.string().optional(),
-    status: z.string().optional(),
-    queued_at: z.string().optional(),
-  }))
+  alerts: z.array(
+    z.object({
+      location_lat: z.number(),
+      location_lng: z.number(),
+      emergency_type: z.string(),
+      description: z.string().optional(),
+      status: z.string().optional(),
+      queued_at: z.union([z.string(), z.number()]).optional(),
+    })
+  ),
 });
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { user, supabase } = await getAuthenticatedUser();
+  if (!user || !supabase) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   const body = await req.json();
   const result = AlertSyncSchema.safeParse(body);
@@ -33,28 +36,26 @@ export async function POST(req: NextRequest) {
     location_lng: a.location_lng,
     emergency_type: a.emergency_type,
     description: a.description || '',
-    routing_mode: 'p2p',
-    status: a.status || 'pending',
+    routing_mode: 'p2p' as const,
+    status: (a.status || 'pending') as 'pending',
     is_synced: true,
-    created_at: a.queued_at ? new Date(a.queued_at).toISOString() : new Date().toISOString()
+    created_at: a.queued_at
+      ? new Date(typeof a.queued_at === 'number' ? a.queued_at : a.queued_at).toISOString()
+      : new Date().toISOString(),
   }));
 
-  const { data, error } = await supabase
-    .from('alerts')
-    .insert(inserts)
-    .select();
+  const { data, error } = await supabase.from('alerts').insert(inserts).select();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Log the sync
   if (data) {
-    const logs = data.map(d => ({
+    const logs = data.map((d) => ({
       alert_id: d.id,
       alert_code: d.alert_code,
       action: 'ALERT_SYNCED_P2P',
       actor_id: user.id,
       actor_role: 'user',
-      routing_mode: 'p2p'
+      routing_mode: 'p2p',
     }));
     await supabase.from('logs').insert(logs);
   }
