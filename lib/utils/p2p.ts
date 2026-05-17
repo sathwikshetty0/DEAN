@@ -27,13 +27,14 @@ export const initP2PChannel = () => {
   }
 };
 
-export const broadcastMessage = (type: P2PMessageType, payload: any) => {
+export const broadcastMessage = (type: P2PMessageType, payload: unknown, senderId?: string) => {
   initP2PChannel();
   const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   const message: P2PMessage = {
     id,
     type,
     payload,
+    sender_id: senderId,
     timestamp: Date.now(),
   };
   channel?.postMessage(message);
