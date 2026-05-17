@@ -9,6 +9,7 @@ import * as z from 'zod';
 import { toast } from 'react-hot-toast';
 import { User, Mail, Phone, MapPin, Loader2, Save, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { EmergencyContacts } from '@/components/sos/EmergencyContacts';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name is too short'),
@@ -219,6 +220,8 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+
+          <EmergencyContacts />
 
           <motion.button
             whileHover={{ scale: 1.01 }}
