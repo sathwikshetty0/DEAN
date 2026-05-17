@@ -1,23 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Plus, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-interface Contact {
-  id: string;
-  name: string;
-  phone: string;
-}
+import { DEFAULT_HOTLINES, CONTACTS_STORAGE_KEY, EmergencyHotline } from '@/lib/constants/emergency';
 
 export const EmergencyContacts = () => {
-  const [contacts, setContacts] = useState<Contact[]>([
-    { id: '1', name: 'Mangaluru Police', phone: '112' },
-    { id: '2', name: 'Ambulance', phone: '108' },
-  ]);
+  const [contacts, setContacts] = useState<EmergencyHotline[]>(DEFAULT_HOTLINES);
   const [showAdd, setShowAdd] = useState(false);
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CONTACTS_STORAGE_KEY);
+      if (saved) setContacts(JSON.parse(saved));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(CONTACTS_STORAGE_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = () => {
     if (newName && newPhone) {
@@ -29,21 +34,25 @@ export const EmergencyContacts = () => {
   };
 
   const removeContact = (id: string) => {
-    setContacts(contacts.filter(c => c.id !== id));
+    if (DEFAULT_HOTLINES.some((h) => h.id === id)) return;
+    setContacts(contacts.filter((c) => c.id !== id));
   };
 
+  const isDefault = (id: string) => DEFAULT_HOTLINES.some((h) => h.id === id);
+
   return (
-    <div className="bg-[#1C2333]/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mt-8">
+    <div className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-2xl p-6 mt-8">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white font-bold flex items-center gap-2">
-          <Phone className="w-4 h-4 text-[#FF2D55]" />
+        <h3 className="font-extrabold font-syne flex items-center gap-2">
+          <Phone className="w-4 h-4 text-[var(--red-sos)]" />
           Emergency Contacts
         </h3>
         <button
+          type="button"
           onClick={() => setShowAdd(!showAdd)}
-          className="p-2 bg-[#FF2D55]/10 hover:bg-[#FF2D55]/20 rounded-full transition-colors"
+          className="p-2 bg-[var(--red-sos)]/10 hover:bg-[var(--red-sos)]/20 rounded-full transition-colors"
         >
-          {showAdd ? <X className="w-4 h-4 text-[#FF2D55]" /> : <Plus className="w-4 h-4 text-[#FF2D55]" />}
+          {showAdd ? <X className="w-4 h-4 text-[var(--red-sos)]" /> : <Plus className="w-4 h-4 text-[var(--red-sos)]" />}
         </button>
       </div>
 
@@ -60,18 +69,19 @@ export const EmergencyContacts = () => {
               placeholder="Contact Name"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#FF2D55]/50 transition-colors"
+              className="w-full bg-[var(--bg-tertiary)] border border-[var(--border-default)] rounded-xl px-4 py-2 text-sm outline-none focus:border-[var(--red-sos)]/50"
             />
             <input
               type="tel"
               placeholder="Phone Number"
               value={newPhone}
               onChange={(e) => setNewPhone(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#FF2D55]/50 transition-colors"
+              className="w-full bg-[var(--bg-tertiary)] border border-[var(--border-default)] rounded-xl px-4 py-2 text-sm outline-none focus:border-[var(--red-sos)]/50"
             />
             <button
+              type="button"
               onClick={addContact}
-              className="w-full bg-[#FF2D55] text-white text-xs font-bold py-3 rounded-xl hover:bg-[#E6294D] transition-colors"
+              className="w-full bg-[var(--red-sos)] text-white text-xs font-bold py-3 rounded-xl hover:opacity-90 transition-colors"
             >
               Add Contact
             </button>
@@ -83,30 +93,31 @@ export const EmergencyContacts = () => {
         {contacts.map((contact) => (
           <div
             key={contact.id}
-            className="group relative bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl p-4 flex items-center justify-between transition-all"
+            className="group relative bg-[var(--bg-tertiary)]/50 border border-[var(--border-default)] rounded-xl p-4 flex items-center justify-between"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                <User className="w-5 h-5 text-slate-400" />
+              <div className="w-10 h-10 rounded-full bg-[var(--bg-primary)] flex items-center justify-center">
+                <User className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
               <div>
-                <h4 className="text-white text-sm font-semibold">{contact.name}</h4>
-                <p className="text-slate-400 text-xs">{contact.phone}</p>
+                <h4 className="text-sm font-semibold">{contact.name}</h4>
+                <p className="text-xs text-[var(--text-muted)]">{contact.phone}</p>
               </div>
             </div>
             <div className="flex gap-2">
               <a
-                href={`tel:${contact.phone}`}
+                href={`tel:${contact.phone.replace(/[^0-9+]/g, '')}`}
                 className="p-2 bg-green-500/20 hover:bg-green-500/30 rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4 text-green-500" />
               </a>
-              {contact.id !== '1' && contact.id !== '2' && (
+              {!isDefault(contact.id) && (
                 <button
+                  type="button"
                   onClick={() => removeContact(contact.id)}
-                  className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors group-hover:opacity-100 opacity-0"
+                  className="p-2 bg-[var(--bg-primary)] hover:bg-red-500/20 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                 >
-                  <X className="w-4 h-4 text-slate-500 hover:text-red-500" />
+                  <X className="w-4 h-4 text-[var(--text-muted)] hover:text-red-500" />
                 </button>
               )}
             </div>
