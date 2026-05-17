@@ -7,6 +7,7 @@ import { AlertTimeline } from '@/components/alert/AlertTimeline';
 import { AlertMap } from '@/components/alert/AlertMap';
 import { getEmergencyIcon } from '@/lib/utils/formatters';
 import { Navigation, Shield } from 'lucide-react';
+import { CopyCoordinates } from '@/components/shared/CopyCoordinates';
 
 interface AlertStatusDisplayProps {
   alert: Alert;
@@ -68,6 +69,7 @@ export const AlertStatusDisplay = ({
             size="large"
           />
         </div>
+        <CopyCoordinates lat={alert.location_lat} lng={alert.location_lng} />
 
         {/* Responder Info */}
         {alert.status !== 'pending' && alert.assigned_responder && (
