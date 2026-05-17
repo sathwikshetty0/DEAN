@@ -48,6 +48,8 @@ export const metadata: Metadata = {
 import { InstallPrompt } from "@/components/shared/InstallPrompt";
 import { OfflineSync } from "@/components/shared/OfflineSync";
 import { QuickActions } from "@/components/shared/QuickActions";
+import { SkipToContent } from "@/components/shared/SkipToContent";
+import { CommandPalette } from "@/components/shared/CommandPalette";
 
 export default function RootLayout({
   children,
@@ -60,6 +62,8 @@ export default function RootLayout({
         className={`${syne.variable} ${dmSans.variable} font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased`}
       >
         <NetworkProvider>
+          <SkipToContent />
+          <CommandPalette />
           <PWARegistration />
           <InstallPrompt />
           <OfflineSync />

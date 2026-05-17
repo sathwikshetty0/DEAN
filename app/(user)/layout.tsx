@@ -62,7 +62,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         </div>
       </nav>
 
-      <main className="flex-1 pt-24 px-6 pb-12 max-w-7xl mx-auto w-full">
+      <main id="main-content" className="flex-1 pt-24 px-6 pb-12 max-w-7xl mx-auto w-full">
         <PageTransition>
           {children}
         </PageTransition>
