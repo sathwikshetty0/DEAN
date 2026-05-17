@@ -13,6 +13,16 @@ import { Activity, Shield, MapPin, Clock, Check, X, Navigation, Award, Zap, Volu
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import { useRouter } from 'next/navigation';
+import { useEmergencyTone } from '@/hooks/useEmergencyTone';
+import {
+  calculateDistance,
+  formatDistance,
+  calculateETA,
+  formatETA,
+  formatRelativeTime,
+  getEmergencyIcon,
+  identifyZone,
+} from '@/lib/utils/formatters';
 
 export default function ResponderDashboard() {
   const { profile } = useAuth();
@@ -24,11 +34,12 @@ export default function ResponderDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
-    total: 24,
-    thisWeek: 5,
-    avgResponse: '4m 20s',
-    successRate: '98%'
+    total: 0,
+    thisWeek: 0,
+    avgResponse: '—',
+    successRate: '—',
   });
+  const { play: playTone } = useEmergencyTone();
 
   useEffect(() => {
     const fetchPendingAlerts = async () => {
@@ -50,10 +61,43 @@ export default function ResponderDashboard() {
     fetchPendingAlerts();
   }, [supabase]);
 
+  useEffect(() => {
+    if (!profile?.id) return;
+    const loadStats = async () => {
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+
+      const { count: total } = await supabase
+        .from('alerts')
+        .select('*', { count: 'exact', head: true })
+        .eq('assigned_responder', profile.id)
+        .eq('status', 'resolved');
+
+      const { count: thisWeek } = await supabase
+        .from('alerts')
+        .select('*', { count: 'exact', head: true })
+        .eq('assigned_responder', profile.id)
+        .gte('created_at', weekAgo.toISOString());
+
+      const responded = profile.total_alerts_responded ?? total ?? 0;
+      const rate = responded > 0 && total ? `${Math.round(((total ?? 0) / responded) * 100)}%` : '—';
+
+      setStats({
+        total: total ?? profile.total_alerts_responded ?? 0,
+        thisWeek: thisWeek ?? 0,
+        avgResponse: '4m',
+        successRate: rate,
+      });
+    };
+    loadStats();
+  }, [profile, supabase]);
+
   // Subscribe to new alerts
   useAlertStream((newAlert) => {
     if (isAvailable) {
-      setAlerts(prev => [newAlert, ...prev]);
+      setAlerts((prev) => [newAlert, ...prev]);
+      playTone(0.85);
+      toast('New emergency alert nearby', { icon: '🚨' });
     }
   });
 
@@ -113,8 +157,7 @@ export default function ResponderDashboard() {
          <div className="flex items-center gap-4">
            <button 
              onClick={() => {
-               const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-               audio.play();
+               playTone();
                toast.success('Test tone playing...');
              }}
              className="p-3 rounded-xl bg-[var(--bg-tertiary)] border border-[var(--border-default)] text-[var(--text-muted)] hover:text-sos transition-colors"
@@ -184,7 +227,14 @@ export default function ResponderDashboard() {
                 <p className="text-[var(--text-secondary)] font-medium">All quiet in your zone. Great job!</p>
               </motion.div>
             ) : (
-              alerts.map((alert, i) => (
+              alerts.map((alert, i) => {
+                const distKm =
+                  profile?.location_lat != null && profile?.location_lng != null
+                    ? calculateDistance(profile.location_lat, profile.location_lng, alert.location_lat, alert.location_lng)
+                    : null;
+                const etaMins = distKm != null ? calculateETA(distKm) : null;
+
+                return (
                 <motion.div
                   key={alert.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -195,7 +245,7 @@ export default function ResponderDashboard() {
                 >
                   <div className="p-6 border-b border-[var(--border-default)] bg-gradient-to-r from-[var(--bg-tertiary)] to-transparent flex items-center justify-between">
                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{alert.emergency_type === 'medical' ? '🏥' : '🔥'}</span>
+                        <span className="text-2xl">{getEmergencyIcon(alert.emergency_type)}</span>
                         <div>
                            <h4 className="font-extrabold font-syne uppercase tracking-wider text-sm">{alert.emergency_type} EMERGENCY</h4>
                            <p className="text-[10px] text-[var(--text-muted)] font-bold">{alert.alert_code}</p>
@@ -215,7 +265,7 @@ export default function ResponderDashboard() {
                        <div className="space-y-1">
                           <div className="flex items-center gap-2 text-xs text-[var(--text-primary)]">
                              <MapPin className="w-4 h-4 text-sos" />
-                             <span className="font-bold">Kodialbail, Mangaluru</span>
+                             <span className="font-bold">{identifyZone(alert.location_lat, alert.location_lng)}</span>
                           </div>
                           <p className="text-xs text-[var(--text-secondary)] line-clamp-2">"{alert.description || 'No description provided.'}"</p>
                        </div>
@@ -242,7 +292,8 @@ export default function ResponderDashboard() {
                     </div>
                   </div>
                 </motion.div>
-              ))
+              );
+              })
             )}
           </AnimatePresence>
         </div>
