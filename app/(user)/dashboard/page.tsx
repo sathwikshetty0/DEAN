@@ -212,7 +212,11 @@ export default function UserDashboard() {
     return () => clearTimeout(t);
   }, [shakeCountdown, handleSOS]);
 
-  useShakeSOS(startEmergencyCountdown, 18);
+  const shakeSensitivity =
+    typeof window !== 'undefined'
+      ? parseInt(localStorage.getItem('dean_shake_threshold') || '18', 10)
+      : 18;
+  useShakeSOS(startEmergencyCountdown, shakeSensitivity);
   useKeyboardSOS(startEmergencyCountdown, !activeAlert && !sending);
   const { isListening, toggleListening, supported: voiceSupported } = useVoiceSOS(
     startEmergencyCountdown,
