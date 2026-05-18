@@ -21,3 +21,7 @@ export const EmergencyHotlineBar = () => (
     </div>
   </div>
 );
+
+
+// Added for debugging purposes
+EmergencyHotlineBar.displayName = 'EmergencyHotlineBar';
