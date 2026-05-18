@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for app.types
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { Database } from './database.types';
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
