@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for alerts
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { z } from 'zod';
 
 /**
