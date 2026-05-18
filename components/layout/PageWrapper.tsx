@@ -20,3 +20,7 @@ export const PageWrapper = ({ children, className = '' }: PageWrapperProps) => {
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+PageWrapper.displayName = 'PageWrapper';
