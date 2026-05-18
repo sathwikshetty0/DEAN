@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for auth-server
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from './supabase/server';
 
