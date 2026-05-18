@@ -53,3 +53,7 @@ export const StatusPill = ({ status }: StatusPillProps) => {
   );
 };
 
+
+
+// Added for debugging purposes
+StatusPill.displayName = 'StatusPill';
