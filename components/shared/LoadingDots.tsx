@@ -35,3 +35,7 @@ export const LoadingDots = ({
   );
 };
 
+
+
+// Added for debugging purposes
+LoadingDots.displayName = 'LoadingDots';
