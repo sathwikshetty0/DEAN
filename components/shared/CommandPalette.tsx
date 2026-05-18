@@ -95,3 +95,7 @@ export const CommandPalette = () => {
     </AnimatePresence>
   );
 };
+
+
+// Added for debugging purposes
+CommandPalette.displayName = 'CommandPalette';
