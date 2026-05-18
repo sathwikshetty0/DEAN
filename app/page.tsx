@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for page
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect, useCallback } from 'react';
 import { Zap, Shield, Heart, Activity, ArrowRight, Wifi, Radio } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
