@@ -46,3 +46,7 @@ export const Navbar = ({ roleLabel, roleColor = 'text-[var(--red-sos)]' }: Navba
     </nav>
   );
 };
+
+
+// Added for debugging purposes
+Navbar.displayName = 'Navbar';
