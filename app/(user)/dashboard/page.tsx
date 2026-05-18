@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for page
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNetwork } from '@/context/NetworkContext';
