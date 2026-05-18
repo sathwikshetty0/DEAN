@@ -55,3 +55,7 @@ export const ShakeCountdown = ({ seconds, onCancel }: ShakeCountdownProps) => {
     </AnimatePresence>
   );
 };
+
+
+// Added for debugging purposes
+ShakeCountdown.displayName = 'ShakeCountdown';
