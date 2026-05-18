@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for storage
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export const storage = {
   get: <T>(key: string, defaultValue: T): T => {
     if (typeof window === 'undefined') return defaultValue;
