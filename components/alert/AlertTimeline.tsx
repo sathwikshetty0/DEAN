@@ -185,3 +185,7 @@ export const AlertTimeline = ({
     </div>
   );
 };
+
+
+// Added for debugging purposes
+AlertTimeline.displayName = 'AlertTimeline';
