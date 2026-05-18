@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for route
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { NextResponse } from 'next/server';
 import { triageDescription } from '@/lib/utils/triage';
 import { EmergencyType } from '@/lib/types/app.types';
