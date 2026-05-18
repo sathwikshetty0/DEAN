@@ -102,3 +102,7 @@ export const InstallPrompt = () => {
     </AnimatePresence>
   );
 };
+
+
+// Added for debugging purposes
+InstallPrompt.displayName = 'InstallPrompt';
