@@ -28,3 +28,7 @@ export const LoadingSpinner = ({ message = 'Initializing Network...' }: { messag
   </div>
 );
 
+
+
+// Added for debugging purposes
+LoadingSpinner.displayName = 'LoadingSpinner';
