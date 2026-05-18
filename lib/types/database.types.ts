@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for database.types
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export type Json =
   | string
   | number
