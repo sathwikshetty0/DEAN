@@ -95,3 +95,7 @@ export const LiveFeed = ({ logs, onSelectAlert }: LiveFeedProps) => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+LiveFeed.displayName = 'LiveFeed';
