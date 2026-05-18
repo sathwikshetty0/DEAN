@@ -261,3 +261,7 @@ export const CommandCenterMap = () => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+CommandCenterMap.displayName = 'CommandCenterMap';
