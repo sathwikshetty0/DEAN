@@ -61,3 +61,7 @@ export const QuickActions = () => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+QuickActions.displayName = 'QuickActions';
