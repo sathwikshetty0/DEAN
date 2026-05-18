@@ -308,3 +308,7 @@ export const AlertDetailsModal = ({ alertId, onClose }: AlertDetailsModalProps) 
     </AnimatePresence>
   );
 };
+
+
+// Added for debugging purposes
+AlertDetailsModal.displayName = 'AlertDetailsModal';
