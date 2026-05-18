@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for client
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/lib/types/database.types';
 
