@@ -102,3 +102,7 @@ export const NetworkStatus = () => {
   );
 };
 
+
+
+// Added for debugging purposes
+NetworkStatus.displayName = 'NetworkStatus';
