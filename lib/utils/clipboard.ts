@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for clipboard
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { toast } from 'react-hot-toast';
 
 export async function copyToClipboard(text: string, label = 'Copied') {
