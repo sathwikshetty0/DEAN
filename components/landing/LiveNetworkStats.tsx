@@ -60,3 +60,7 @@ export const LiveNetworkStats = () => {
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+LiveNetworkStats.displayName = 'LiveNetworkStats';
