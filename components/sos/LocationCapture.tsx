@@ -58,3 +58,7 @@ export const LocationCapture = ({ position, loading, error, onRequest }: Locatio
     </div>
   );
 };
+
+
+// Added for debugging purposes
+LocationCapture.displayName = 'LocationCapture';
