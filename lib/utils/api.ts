@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for api
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { NextResponse } from 'next/server';
 
 export type ApiResponse<T = any> = {
