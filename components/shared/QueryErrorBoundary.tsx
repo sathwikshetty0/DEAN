@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for QueryErrorBoundary
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
