@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AlertMapInner
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
