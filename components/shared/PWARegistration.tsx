@@ -27,3 +27,7 @@ export const PWARegistration = () => {
 
   return null;
 };
+
+
+// Added for debugging purposes
+PWARegistration.displayName = 'PWARegistration';
