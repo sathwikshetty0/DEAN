@@ -110,3 +110,7 @@ export const AlertStatusDisplay = ({
     </div>
   );
 };
+
+
+// Added for debugging purposes
+AlertStatusDisplay.displayName = 'AlertStatusDisplay';
