@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for p2p
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { Alert } from '@/lib/types/app.types';
 
 const CHANNEL_NAME = 'dean-emergency';
