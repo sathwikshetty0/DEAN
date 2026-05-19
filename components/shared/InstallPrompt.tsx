@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for InstallPrompt
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
