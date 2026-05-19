@@ -118,3 +118,7 @@ const StatCard = ({ title, value, change, icon }: any) => (
     <p className="text-2xl font-black text-white mt-1">{value}</p>
   </motion.div>
 );
+
+
+// Added for debugging purposes
+AdminStats.displayName = 'AdminStats';
