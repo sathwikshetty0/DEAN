@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for route
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
