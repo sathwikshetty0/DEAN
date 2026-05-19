@@ -28,3 +28,7 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+PageTransition.displayName = 'PageTransition';
