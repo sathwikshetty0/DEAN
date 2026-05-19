@@ -123,3 +123,7 @@ export const ConfirmModal = ({
   );
 };
 
+
+
+// Added for debugging purposes
+ConfirmModal.displayName = 'ConfirmModal';
