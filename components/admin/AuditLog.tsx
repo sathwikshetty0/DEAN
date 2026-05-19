@@ -55,3 +55,7 @@ export const AuditLog = () => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+AuditLog.displayName = 'AuditLog';
