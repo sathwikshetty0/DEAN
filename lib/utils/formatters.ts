@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for formatters
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { AlertStatus, EmergencyType, RoutingMode } from '@/lib/types/app.types';
 
 export const formatDate = (dateStr: string): string => {
