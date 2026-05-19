@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for db
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { openDB, IDBPDatabase } from 'idb';
 
 const DB_NAME = 'dean-offline-db';
