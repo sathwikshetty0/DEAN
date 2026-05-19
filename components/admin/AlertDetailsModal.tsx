@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AlertDetailsModal
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Alert, Profile } from '@/lib/types/app.types';
