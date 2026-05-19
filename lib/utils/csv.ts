@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for csv
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export const exportToCSV = (data: any[], filename: string) => {
   if (data.length === 0) return;
 
