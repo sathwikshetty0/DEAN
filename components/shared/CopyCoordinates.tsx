@@ -32,3 +32,7 @@ export const CopyCoordinates = ({ lat, lng }: CopyCoordinatesProps) => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+CopyCoordinates.displayName = 'CopyCoordinates';
