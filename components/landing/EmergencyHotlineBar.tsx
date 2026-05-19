@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for EmergencyHotlineBar
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import { Phone } from 'lucide-react';
 import { DEFAULT_HOTLINES } from '@/lib/constants/emergency';
 
