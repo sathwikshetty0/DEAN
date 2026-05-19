@@ -127,3 +127,7 @@ export const EmergencyContacts = () => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+EmergencyContacts.displayName = 'EmergencyContacts';
