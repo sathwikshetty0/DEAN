@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for layout
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
