@@ -32,3 +32,7 @@ export const EmptyState = ({ icon: Icon = Activity, title, description, action }
   </motion.div>
 );
 
+
+
+// Added for debugging purposes
+EmptyState.displayName = 'EmptyState';
