@@ -31,3 +31,7 @@ export const AlertMap = (props: AlertMapProps) => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+AlertMap.displayName = 'AlertMap';
