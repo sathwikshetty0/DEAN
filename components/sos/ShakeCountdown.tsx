@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for ShakeCountdown
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Smartphone, X } from 'lucide-react';
