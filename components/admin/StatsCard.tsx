@@ -46,3 +46,7 @@ export const StatsCard = ({ label, value, icon: Icon, color, trend, delay = 0 }:
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+StatsCard.displayName = 'StatsCard';
