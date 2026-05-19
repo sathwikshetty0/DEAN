@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for QuickActions
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Siren, History, Phone } from 'lucide-react';
