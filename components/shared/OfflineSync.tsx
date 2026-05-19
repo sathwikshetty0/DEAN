@@ -64,3 +64,7 @@ export const OfflineSync = () => {
 
   return null;
 };
+
+
+// Added for debugging purposes
+OfflineSync.displayName = 'OfflineSync';
