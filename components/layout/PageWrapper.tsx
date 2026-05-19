@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for PageWrapper
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
