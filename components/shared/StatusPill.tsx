@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for StatusPill
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { AlertCircle, CheckCircle2, Clock, MapPin, XCircle } from 'lucide-react';
 
