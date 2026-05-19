@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for LiveNetworkStats
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Activity, Radio, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
