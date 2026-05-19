@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for LiveFeed
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { Log } from '@/lib/types/app.types';
 import { formatRelativeTime } from '@/lib/utils/formatters';
