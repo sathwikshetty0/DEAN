@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for page
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
