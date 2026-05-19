@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for CommandPalette
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
