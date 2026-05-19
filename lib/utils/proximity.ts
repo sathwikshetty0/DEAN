@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for proximity
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const R = 6371; // Radius of the earth in km
   const dLat = deg2rad(lat2 - lat1);
