@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for emergency
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export interface EmergencyHotline {
   id: string;
   name: string;
