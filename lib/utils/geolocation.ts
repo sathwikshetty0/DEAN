@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for geolocation
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export interface GeoPosition {
   lat: number;
   lng: number;
