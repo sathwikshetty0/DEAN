@@ -55,3 +55,7 @@ export const GlassCard = ({
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+GlassCard.displayName = 'GlassCard';
