@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useEmergencyTone
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useCallback, useRef } from 'react';
 
 const TONE_URL = 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3';
