@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for server
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { createServerClient } from '@supabase/ssr';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
