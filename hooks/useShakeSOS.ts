@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useShakeSOS
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
