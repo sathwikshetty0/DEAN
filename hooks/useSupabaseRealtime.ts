@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for useSupabaseRealtime
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Alert, Log } from '@/lib/types/app.types';
