@@ -121,3 +121,7 @@ export const useAlerts = () => {
   }
   return context;
 };
+
+
+// Added for debugging purposes
+AlertProvider.displayName = 'AlertProvider';
