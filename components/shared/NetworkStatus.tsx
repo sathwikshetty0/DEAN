@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for NetworkStatus
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, WifiOff, Globe, Zap } from 'lucide-react';
