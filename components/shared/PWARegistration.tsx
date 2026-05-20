@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for PWARegistration
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import { useEffect } from 'react';
 
 export const PWARegistration = () => {
