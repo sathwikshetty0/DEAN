@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for CopyCoordinates
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { Copy, ExternalLink } from 'lucide-react';
 import { copyToClipboard, formatCoords, mapsUrl } from '@/lib/utils/clipboard';
