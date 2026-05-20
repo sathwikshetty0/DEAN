@@ -5,11 +5,13 @@ import { execSync } from 'child_process';
 const dirs = [
   path.join(process.cwd(), 'components'),
   path.join(process.cwd(), 'lib'),
-  path.join(process.cwd(), 'app')
+  path.join(process.cwd(), 'app'),
+  path.join(process.cwd(), 'context'),
+  path.join(process.cwd(), 'hooks')
 ];
 
 let commitsDone = 0;
-const targetCommits = 40;
+const targetCommits = 100;
 
 function walkDir(dir, callback) {
   if (!fs.existsSync(dir)) return;
