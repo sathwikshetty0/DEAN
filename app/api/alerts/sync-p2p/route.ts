@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for route
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { getAuthenticatedUser } from '@/lib/auth-server';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
