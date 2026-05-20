@@ -78,3 +78,7 @@ export const Sidebar = ({ links }: SidebarProps) => {
     </aside>
   );
 };
+
+
+// Added for debugging purposes
+Sidebar.displayName = 'Sidebar';
