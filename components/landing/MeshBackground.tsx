@@ -32,3 +32,7 @@ export const MeshBackground = () => (
     />
   </motion.div>
 );
+
+
+// Added for debugging purposes
+MeshBackground.displayName = 'MeshBackground';
