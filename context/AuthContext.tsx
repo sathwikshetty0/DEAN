@@ -87,3 +87,7 @@ export const useAuth = () => {
   }
   return context;
 };
+
+
+// Added for debugging purposes
+AuthProvider.displayName = 'AuthProvider';
