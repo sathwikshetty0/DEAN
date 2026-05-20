@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useKeyboardSOS
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useEffect, useCallback } from 'react';
 
 /** Shift+S or Ctrl+Shift+E triggers emergency flow */
