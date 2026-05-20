@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for Navbar
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
