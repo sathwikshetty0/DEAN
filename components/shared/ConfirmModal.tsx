@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for ConfirmModal
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, X } from 'lucide-react';
