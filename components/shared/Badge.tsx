@@ -74,3 +74,7 @@ export const Badge = ({
   );
 };
 
+
+
+// Added for debugging purposes
+Badge.displayName = 'Badge';
