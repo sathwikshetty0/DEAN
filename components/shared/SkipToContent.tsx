@@ -8,3 +8,7 @@ export const SkipToContent = () => (
     Skip to main content
   </a>
 );
+
+
+// Added for debugging purposes
+SkipToContent.displayName = 'SkipToContent';
