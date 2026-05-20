@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AlertCard
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { Alert, Profile } from '@/lib/types/app.types';
 import { StatusPill } from '@/components/shared/StatusPill';
