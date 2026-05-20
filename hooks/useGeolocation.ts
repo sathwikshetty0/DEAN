@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useGeolocation
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import { getCurrentPosition, watchPosition, clearWatch, GeoPosition, calculateDistance } from '@/lib/utils/geolocation';
 
