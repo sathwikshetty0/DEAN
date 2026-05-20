@@ -107,3 +107,7 @@ export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+AlertTable.displayName = 'AlertTable';
