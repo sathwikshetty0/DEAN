@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AuditLog
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
