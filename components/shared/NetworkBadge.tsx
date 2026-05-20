@@ -62,3 +62,7 @@ export const NetworkBadge = () => {
     </motion.div>
   );
 };
+
+
+// Added for debugging purposes
+NetworkBadge.displayName = 'NetworkBadge';
