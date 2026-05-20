@@ -45,3 +45,7 @@ export const EmergencyTypeSelector = ({ selected, onChange }: EmergencyTypeSelec
     </div>
   );
 };
+
+
+// Added for debugging purposes
+EmergencyTypeSelector.displayName = 'EmergencyTypeSelector';
