@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useShakeDetection
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useEffect, useRef } from 'react';
 
 /**
