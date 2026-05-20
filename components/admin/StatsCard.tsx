@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for StatsCard
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import { motion } from 'framer-motion';
 
 interface StatsCardProps {
