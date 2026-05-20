@@ -178,3 +178,7 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+SOSButton.displayName = 'SOSButton';
