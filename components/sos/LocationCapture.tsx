@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for LocationCapture
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { MapPin, Loader2 } from 'lucide-react';
