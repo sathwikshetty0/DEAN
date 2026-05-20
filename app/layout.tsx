@@ -1,3 +1,7 @@
+/**
+ * @fileoverview UI Component for layout
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
 import type { Metadata } from "next";
 import { Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
