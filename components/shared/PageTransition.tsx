@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for PageTransition
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
