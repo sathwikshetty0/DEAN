@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for EmergencyContacts
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Phone, Plus, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
