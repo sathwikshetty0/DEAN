@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AdminStats
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
