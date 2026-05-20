@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for useEmergencyMap
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import L from 'leaflet';
 import { useMemo } from 'react';
 
