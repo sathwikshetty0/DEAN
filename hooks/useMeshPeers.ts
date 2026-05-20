@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for useMeshPeers
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
+
 import { useEffect, useState } from 'react';
 import { listenForP2P, broadcastMessage } from '@/lib/utils/p2p';
 
