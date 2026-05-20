@@ -53,3 +53,7 @@ export const SystemStatusBar = () => {
     </div>
   );
 };
+
+
+// Added for debugging purposes
+SystemStatusBar.displayName = 'SystemStatusBar';
