@@ -122,3 +122,7 @@ export const GlobalLoader = ({ show, message = 'Loading...' }: GlobalLoaderProps
   );
 };
 
+
+
+// Added for debugging purposes
+GlobalLoader.displayName = 'GlobalLoader';
