@@ -71,3 +71,7 @@ export const useNetwork = () => {
   }
   return context;
 };
+
+
+// Added for debugging purposes
+NetworkProvider.displayName = 'NetworkProvider';
