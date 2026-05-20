@@ -1,3 +1,7 @@
+/**
+ * @fileoverview UI Component for EmptyState
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
 import React from 'react';
 import { Activity } from 'lucide-react';
 
