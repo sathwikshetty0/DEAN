@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for triage
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 import { EmergencyType } from '@/lib/types/app.types';
 
 export type TriageSeverity = 'low' | 'medium' | 'high' | 'critical';
