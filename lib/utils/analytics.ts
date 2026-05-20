@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for analytics
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 export interface ResponderMetric {
   responderId: string;
   name: string;
