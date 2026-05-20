@@ -47,3 +47,7 @@ export const OfflineBanner = () => {
   );
 };
 
+
+
+// Added for debugging purposes
+OfflineBanner.displayName = 'OfflineBanner';
