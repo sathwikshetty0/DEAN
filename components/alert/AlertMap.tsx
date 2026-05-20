@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for AlertMap
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import dynamic from 'next/dynamic';
 import React from 'react';
 
