@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for OfflineSync
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import { useEffect, useRef } from 'react';
 import { useNetwork } from '@/context/NetworkContext';
 import { getUnsyncedAlerts, markAlertAsSynced, clearSyncedAlerts } from '@/lib/utils/db';
