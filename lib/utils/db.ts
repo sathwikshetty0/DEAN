@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @fileoverview Utility module for db
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -100,3 +100,6 @@ export const clearSyncedAlerts = async () => {
     }
   }
 };
+
+
+export const clearAllAlerts = async () => { const db = await getDB(); if (!db) return; await db.clear(STORE_NAME); };
