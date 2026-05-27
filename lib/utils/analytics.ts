@@ -34,3 +34,6 @@ export const calculateResponderMetrics = (
     };
   });
 };
+
+
+export const trackPerformanceMark = (name: string) => { if (typeof window !== 'undefined' && window.performance) { window.performance.mark(name); } };
