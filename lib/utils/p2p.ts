@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for p2p
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -8,6 +8,10 @@ const CHANNEL_NAME = 'dean-emergency';
 let channel: BroadcastChannel | null = null;
 
 export type P2PMessageType = 'NEW_ALERT' | 'STATUS_UPDATE' | 'HEARTBEAT' | 'ACK';
+
+export const sendACK = (messageId: string, senderId?: string) => {
+  broadcastMessage('ACK', { ack_message_id: messageId }, senderId);
+};
 
 interface P2PMessage {
   id: string;
