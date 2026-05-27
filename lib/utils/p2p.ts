@@ -13,6 +13,9 @@ export const sendACK = (messageId: string, senderId?: string) => {
   broadcastMessage('ACK', { ack_message_id: messageId }, senderId);
 };
 
+/**
+ * Represents a standard P2P message broadcasted via BroadcastChannel
+ */
 interface P2PMessage {
   id: string;
   type: P2PMessageType;
@@ -21,6 +24,9 @@ interface P2PMessage {
   timestamp: number;
 }
 
+/**
+ * Set of message IDs to prevent duplicate processing
+ */
 const seenMessages = new Set<string>();
 
 const logP2P = (msg: string, data?: any) => {
