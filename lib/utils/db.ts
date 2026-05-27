@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for db
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
