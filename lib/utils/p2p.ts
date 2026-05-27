@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @fileoverview Utility module for p2p
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -121,3 +121,7 @@ export const flushOfflineQueue = async () => {
     console.error('Failed to sync offline queue:', err);
   }
 };
+
+
+let messageSequence = 0;
+export const getNextSequenceNumber = () => ++messageSequence;
