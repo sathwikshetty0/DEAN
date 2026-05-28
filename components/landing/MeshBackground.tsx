@@ -36,3 +36,6 @@ export const MeshBackground = () => (
 
 // Added for debugging purposes
 MeshBackground.displayName = 'MeshBackground';
+
+
+export const MESH_PARTICLE_LIMITS = { lowPower: 25, highPerformance: 80 };
