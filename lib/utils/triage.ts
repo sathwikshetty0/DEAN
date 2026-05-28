@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for triage
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -29,7 +29,7 @@ const RULES: Rule[] = [
     type: 'fire',
     patterns: [
       /\b(fire|smoke|burning|flame|blaze|ignit|gas leak)\b/i,
-      /\b(ಬೆಂಕಿ|ಹೊತ್ತಿ)\b/,
+      /\b(à²¬à³†à²‚à²•à²¿|à²¹à³Šà²¤à³à²¤à²¿)\b/,
     ],
     weight: 0.95,
     severity: 'critical',
@@ -39,7 +39,7 @@ const RULES: Rule[] = [
     type: 'medical',
     patterns: [
       /\b(heart|cardiac|chest pain|breath|unconscious|bleed|stroke|seizure|medical|ambulance|injured)\b/i,
-      /\b(ಚಾತುರ್ಯ|ಉಸಿರಾಟ|ರಕ್ತ)\b/,
+      /\b(à²šà²¾à²¤à³à²°à³à²¯|à²‰à²¸à²¿à²°à²¾à²Ÿ|à²°à²•à³à²¤)\b/,
     ],
     weight: 0.98,
     severity: 'critical',
@@ -58,7 +58,7 @@ const RULES: Rule[] = [
     type: 'flood',
     patterns: [
       /\b(flood|water rising|drown|submerged|landslide|cyclone|rain)\b/i,
-      /\b(ಪ್ರವಾಹ|ನೀರು)\b/,
+      /\b(à²ªà³à²°à²µà²¾à²¹|à²¨à³€à²°à³)\b/,
     ],
     weight: 0.88,
     severity: 'high',
