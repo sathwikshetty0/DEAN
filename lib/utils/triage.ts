@@ -133,7 +133,7 @@ export function triageDescription(
     suggestedType,
     confidence,
     severity,
-    priorityScore: SEVERITY_SCORE[severity] + (confidence > 0.9 ? 1 : 0),
+    priorityScore: SEVERITY_SCORE[severity] * 2 + (confidence > 0.9 ? 1 : 0),
     keywords: [...new Set(keywords)],
     isOverridden: suggestedType !== originalType,
     suggestedActions: best?.actions ?? [],
