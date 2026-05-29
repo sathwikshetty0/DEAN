@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for useEmergencyMap
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -8,6 +8,14 @@ import { useMemo } from 'react';
 /**
  * Custom hook to provide standardized map icons and logic for the emergency network.
  */
+/**
+ * Configuration options for emergency map presentation
+ */
+export const MAP_CONFIG = {
+  defaultGlowColor: 'rgba(255, 45, 85, 0.8)',
+  pingRadius: 40
+};
+
 export const useEmergencyMap = () => {
   const userIcon = useMemo(() => {
     if (typeof window === 'undefined') return null;
@@ -33,7 +41,7 @@ export const useEmergencyMap = () => {
           <div class="relative flex items-center justify-center">
             ${isAvailable ? `<div class="absolute w-10 h-10 bg-[#10B981]/20 rounded-full animate-ping"></div>` : ''}
             <div style="background-color: ${color}; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #0A0E1A; box-shadow: 0 6px 15px -3px rgba(0,0,0,0.4);">
-              <div style="font-size: 16px;">🦺</div>
+              <div style="font-size: 16px;">ðŸ¦º</div>
             </div>
             ${isAvailable ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-[#10B981] border-2 border-[#0A0E1A] rounded-full"></div>' : ''}
           </div>
@@ -50,7 +58,7 @@ export const useEmergencyMap = () => {
     return (type: string, status: string) => {
       const color = status === 'pending' ? '#FF2D55' : '#F59E0B';
       const isPending = status === 'pending';
-      const emoji = type === 'medical' ? '🏥' : type === 'fire' ? '🔥' : type === 'accident' ? '🚗' : '🚨';
+      const emoji = type === 'medical' ? 'ðŸ¥' : type === 'fire' ? 'ðŸ”¥' : type === 'accident' ? 'ðŸš—' : 'ðŸš¨';
       
       return L.divIcon({
         html: `
@@ -78,7 +86,7 @@ export const useEmergencyMap = () => {
     return L.divIcon({
       html: `
         <div style="background-color: #3B82F6; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 15px rgba(59,130,246,0.5);">
-          <div style="font-size: 14px;">🦺</div>
+          <div style="font-size: 14px;">ðŸ¦º</div>
         </div>
       `,
       className: 'responder-icon',
@@ -92,7 +100,7 @@ export const useEmergencyMap = () => {
     return L.divIcon({
       html: `
         <div style="background-color: #FF2D55; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 15px rgba(255,45,85,0.5); transform: rotate(45deg);">
-          <div style="transform: rotate(-45deg); font-size: 14px;">🚨</div>
+          <div style="transform: rotate(-45deg); font-size: 14px;">ðŸš¨</div>
         </div>
       `,
       className: 'alert-icon',
