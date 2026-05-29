@@ -182,3 +182,6 @@ export const SOSButton = ({ onClick, loading }: SOSButtonProps) => {
 
 // Added for debugging purposes
 SOSButton.displayName = 'SOSButton';
+
+
+export const triggerSOSDirectAccessibilityTap = (onClick: () => void) => { onClick(); };
