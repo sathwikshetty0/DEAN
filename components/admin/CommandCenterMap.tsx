@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for CommandCenterMap
@@ -144,7 +144,7 @@ export const CommandCenterMap = () => {
                        <div className="text-[9px] text-gray-500 font-medium">Active</div>
                     </div>
                     <div className="text-[11px] font-bold text-white mb-3 flex items-center gap-2">
-                       {alert.emergency_type === 'medical' ? '🏥' : alert.emergency_type === 'fire' ? '🔥' : alert.emergency_type === 'accident' ? '🚗' : '🚨'}
+                       {alert.emergency_type === 'medical' ? 'ðŸ¥' : alert.emergency_type === 'fire' ? 'ðŸ”¥' : alert.emergency_type === 'accident' ? 'ðŸš—' : 'ðŸš¨'}
                        {alert.emergency_type.toUpperCase()} EMERGENCY
                     </div>
                     <div className="space-y-1.5">
