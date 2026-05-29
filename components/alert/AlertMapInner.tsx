@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for AlertMapInner
@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, Polyline, Circle } from 'react-leaflet';
 import L from 'leaflet';
 
 import { useEmergencyMap } from '@/hooks/useEmergencyMap';
@@ -55,6 +55,7 @@ const AlertMapInner = ({ userLocation, responderLocation }: AlertMapInnerProps) 
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
       <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon} />
+      <Circle center={[userLocation.lat, userLocation.lng]} radius={200} pathOptions={{ color: '#FF2D55', fillColor: '#FF2D55', fillOpacity: 0.15, weight: 1 }} />
       {responderLocation && (
         <>
           <Marker position={[responderLocation.lat, responderLocation.lng]} icon={responderIcon} />
