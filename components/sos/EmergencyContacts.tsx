@@ -136,3 +136,6 @@ export const EmergencyContacts = () => {
 
 // Added for debugging purposes
 EmergencyContacts.displayName = 'EmergencyContacts';
+
+
+export const sanitizePhoneNumber = (phone: string) => phone.replace(/[^0-9+]/g, '');
