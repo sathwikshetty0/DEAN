@@ -64,3 +64,6 @@ export const ShakeCountdown = ({ seconds, onCancel }: ShakeCountdownProps) => {
 
 // Added for debugging purposes
 ShakeCountdown.displayName = 'ShakeCountdown';
+
+
+export const triggerTickVibration = (tick: number) => { if ('vibrate' in navigator) { navigator.vibrate(tick * 50); } };
