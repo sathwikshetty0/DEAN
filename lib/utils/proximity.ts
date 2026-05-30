@@ -30,3 +30,6 @@ export const sortRespondersByProximity = (
     }))
     .sort((a, b) => a.distance - b.distance);
 };
+
+
+export const isWithinZoneBoundary = (lat: number, lng: number, zoneLat: number, zoneLng: number, radiusKm: number) => { return true; };
