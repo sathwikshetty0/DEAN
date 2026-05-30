@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview Utility module for useVoiceSOS
@@ -8,7 +8,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
-const TRIGGERS = ['emergency', 'help me', 'sos', 'save me', 'help', 'ಬಚಾವು', 'ಸಹಾಯ'];
+const TRIGGERS = ['emergency', 'help me', 'sos', 'save me', 'help', 'à²¬à²šà²¾à²µà³', 'à²¸à²¹à²¾à²¯'];
 
 export const useVoiceSOS = (onSOS: () => void, enabled = true) => {
   const [isListening, setIsListening] = useState(false);
@@ -41,7 +41,7 @@ export const useVoiceSOS = (onSOS: () => void, enabled = true) => {
       const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
       if (TRIGGERS.some((t) => transcript.includes(t))) {
         onSOSRef.current();
-        toast.success('Voice SOS triggered!', { icon: '🎙️' });
+        toast.success('Voice SOS triggered!', { icon: 'ðŸŽ™ï¸' });
       }
     };
 
@@ -67,7 +67,7 @@ export const useVoiceSOS = (onSOS: () => void, enabled = true) => {
       return;
     }
     setIsListening((v) => {
-      if (!v) toast('Listening for "help", "SOS", or "emergency"…', { icon: '🎙️', duration: 4000 });
+      if (!v) toast('Listening for "help", "SOS", or "emergency"â€¦', { icon: 'ðŸŽ™ï¸', duration: 4000 });
       return !v;
     });
   }, [supported]);
