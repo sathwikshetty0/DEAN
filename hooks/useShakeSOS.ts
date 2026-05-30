@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview Utility module for useShakeSOS
@@ -28,7 +28,7 @@ export const useShakeSOS = (onShake: () => void, sensitivity = 15) => {
         if (speed > sensitivity) {
           onShake();
           if ('vibrate' in navigator) {
-            navigator.vibrate([200, 100, 200]);
+            navigator.vibrate([300, 100, 300, 100, 300]);
           }
         }
       }
