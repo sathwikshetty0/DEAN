@@ -140,3 +140,6 @@ export const identifyZone = (lat: number, lng: number): string => {
   if (lat <= 12.87) return 'Ullal / South';
   return 'Coastal Zone';
 };
+
+
+export const formatKannadaZoneName = (zone: string) => { return zone === 'Central' ? 'à²®à²‚à²—à²³à³‚à²°à³ à²•à³‡à²‚à²¦à³à²°' : zone; };
