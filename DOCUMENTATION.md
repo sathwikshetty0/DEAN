@@ -1,4 +1,4 @@
-# D-EAN Technical Specification & Documentation
+﻿# D-EAN Technical Specification & Documentation
 
 ## 1. Executive Summary
 **D-EAN (Decentralized Emergency Assistance Network)** is a resilient, community-driven emergency coordination platform. Unlike traditional emergency systems that rely entirely on centralized servers and stable internet, D-EAN is built to survive network partitioning and internet outages using a "Dual-Mode" communication strategy.
@@ -23,6 +23,7 @@ D-EAN uses a hybrid architecture to ensure "The SOS Always Gets Through."
 - **Best For**: Normal operations, coordinating across distant neighborhoods, and long-term logging.
 
 ### B. P2P Mode (Fallback/Local Mesh)
+- **Offline Simulation**: Integrated developers toggle in context to bypass standard connectivity checks for prototype testing.
 - **Engine**: Browser `BroadcastChannel` API.
 - **Workflow**: If the internet is detected as down, the app switches to P2P mode. It broadcasts the SOS locally to all other open D-EAN tabs on the same origin (e.g., in a community center or local mesh network).
 - **Best For**: Hyper-local coordination within a building or neighborhood when the ISP fails.
