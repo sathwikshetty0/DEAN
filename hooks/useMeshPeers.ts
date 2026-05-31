@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import { listenForP2P, broadcastMessage } from '@/lib/utils/p2p';
 
-const PEER_TTL_MS = 15000;
+const PEER_TTL_MS = 18000; // Increased to prevent status flickering
 
 export const useMeshPeers = (enabled: boolean) => {
   const [peerCount, setPeerCount] = useState(0);
