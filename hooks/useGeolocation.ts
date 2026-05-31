@@ -78,3 +78,6 @@ export const useGeolocation = (watch = false) => {
 
   return { position, error, loading, requestLocation };
 };
+
+
+export const logGeoErrorToOfflineCache = (errorMsg: string) => { try { localStorage.setItem('dean_geo_err_log', errorMsg); } catch(e){} };
