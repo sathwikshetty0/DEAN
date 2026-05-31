@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { RoutingMode } from '@/lib/types/app.types';
 import { flushOfflineQueue } from '@/lib/utils/p2p';
 
