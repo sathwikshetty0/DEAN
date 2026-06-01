@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for csv
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -6,9 +6,14 @@ export const exportToCSV = (data: any[], filename: string) => {
   if (data.length === 0) return;
 
   const headers = Object.keys(data[0]);
-  const rows = data.map(row => headers.map(header => row[header]));
+  const friendlyHeaders = headers.map(h => h.toUpperCase().replace(/_/g, ' '));
+  const rows = data.map(row => headers.map(header => {
+    const val = row[header];
+    if (val instanceof Date) return val.toISOString();
+    return val;
+  }));
   
-  const csv = generateCSV(headers, rows);
+  const csv = generateCSV(friendlyHeaders, rows);
   downloadCSV(csv, filename);
 };
 
