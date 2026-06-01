@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Alert, Profile } from '@/lib/types/app.types';
@@ -14,6 +14,7 @@ interface AlertTableProps {
 }
 
 export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
+  // Filter capability placeholder for zone tracking
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-3xl overflow-hidden shadow-2xl">
       <div className="overflow-x-auto">
@@ -68,7 +69,7 @@ export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs font-bold">{(alert.triggered_by as Partial<Profile> | undefined)?.name ?? '—'}</div>
+                      <div className="text-xs font-bold">{(alert.triggered_by as Partial<Profile> | undefined)?.name ?? 'â€”'}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className={clsx(
@@ -83,7 +84,7 @@ export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
                     </td>
                     <td className="px-6 py-4"><StatusPill status={alert.status} /></td>
                     <td className="px-6 py-4 text-xs font-medium text-[var(--text-secondary)]">
-                      {(alert.assigned_responder as Partial<Profile> | undefined)?.name ?? '—'}
+                      {(alert.assigned_responder as Partial<Profile> | undefined)?.name ?? 'â€”'}
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-xs font-medium">{formatDate(alert.created_at)}</div>
