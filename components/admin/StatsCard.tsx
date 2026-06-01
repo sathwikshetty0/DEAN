@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for StatsCard
@@ -6,6 +6,8 @@
  */
 
 import { motion } from 'framer-motion';
+import { LucideIcon } from 'lucide-react';
+import { clsx } from 'clsx';
 
 interface StatsCardProps {
   label: string;
@@ -25,7 +27,7 @@ export const StatsCard = ({ label, value, icon: Icon, color, trend, delay = 0 }:
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       whileHover={{ y: -5 }}
-      className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl border border-[var(--border-default)] p-8 rounded-[2rem] relative overflow-hidden group shadow-xl shadow-black/5"
+      className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl border border-[var(--border-default)] p-6 rounded-[2rem] relative overflow-hidden group shadow-xl shadow-black/5"
     >
       <div className={clsx('absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-10 group-hover:scale-150 transition-transform duration-700 blur-2xl', bgClass)} />
       
