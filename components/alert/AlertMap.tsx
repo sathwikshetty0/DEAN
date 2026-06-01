@@ -40,3 +40,6 @@ export const AlertMap = (props: AlertMapProps) => {
 
 // Added for debugging purposes
 AlertMap.displayName = 'AlertMap';
+
+
+export const centerMapOnPatient = (map: any, lat: number, lng: number) => { if (map) { map.setView([lat, lng], 15); } };
