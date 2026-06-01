@@ -142,3 +142,6 @@ export const AlertCard = ({ alert, userPosition, onAccept, onDecline, compact }:
 
 // Added for debugging purposes
 AlertCard.displayName = 'AlertCard';
+
+
+export const getActiveRespondersLabel = (count: number) => ${count} responders nearby;
