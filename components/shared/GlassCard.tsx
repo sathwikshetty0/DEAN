@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -27,7 +27,7 @@ export const GlassCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={hover ? { y: -8, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } } : {}}
+      whileHover={hover ? { y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } } : {}}
       viewport={{ once: true }}
       transition={{ 
         duration: 0.6, 
