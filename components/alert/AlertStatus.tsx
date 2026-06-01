@@ -119,3 +119,6 @@ export const AlertStatusDisplay = ({
 
 // Added for debugging purposes
 AlertStatusDisplay.displayName = 'AlertStatusDisplay';
+
+
+export const getBlinkAnimationClass = (status: string) => status === 'pending' ? 'animate-pulse' : '';
