@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useNetwork } from '@/context/NetworkContext';
@@ -9,7 +9,7 @@ type HealthStatus = 'ok' | 'degraded' | 'unknown';
 export const SystemStatusBar = () => {
   const { isOnline, mode } = useNetwork();
   const [health, setHealth] = useState<HealthStatus>('unknown');
-  const [uptime, setUptime] = useState<string>('—');
+  const [uptime, setUptime] = useState<string>('â€”');
 
   useEffect(() => {
     const check = async () => {
@@ -18,7 +18,7 @@ export const SystemStatusBar = () => {
         if (res.ok) {
           const data = await res.json();
           setHealth('ok');
-          setUptime(data.uptime ?? '—');
+          setUptime(data.uptime ?? 'â€”');
         } else {
           setHealth('degraded');
         }
@@ -32,6 +32,7 @@ export const SystemStatusBar = () => {
   }, []);
 
   const items = [
+    { label: 'Mesh Sync', value: isOnline ? 'Idle' : 'Pending', icon: Radio, ok: isOnline },
     { label: 'API', value: health === 'ok' ? 'OK' : 'DEGRADED', icon: Server, ok: health === 'ok' },
     { label: 'Uptime', value: uptime, icon: Database, ok: health === 'ok' },
     { label: 'Realtime', value: isOnline ? 'Active' : 'Degraded', icon: Radio, ok: isOnline },
