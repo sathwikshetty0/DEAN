@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 /**
  * @fileoverview UI Component for StatsCard
@@ -57,3 +57,6 @@ export const StatsCard = ({ label, value, icon: Icon, color, trend, delay = 0 }:
 
 // Added for debugging purposes
 StatsCard.displayName = 'StatsCard';
+
+
+export const getStatTooltipText = (label: string) => Display metrics related to ;
