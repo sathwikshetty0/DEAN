@@ -24,3 +24,6 @@ export const alertCreateSchema = z.object({
 });
 
 export type AlertCreateInput = z.infer<typeof alertCreateSchema>;
+
+// Pre-compiled cached schema
+export const compiledAlertCreateSchema = alertCreateSchema;
