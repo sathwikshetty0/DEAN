@@ -66,6 +66,8 @@ export const listenForP2P = (callback: (message: P2PMessage) => void) => {
   if (!channel) return;
   
   const handleMessage = (event: MessageEvent<P2PMessage>) => {
+    // Verify same origin sender policy
+    if (event.origin !== window.location.origin) return;
     if (seenMessages.has(event.data.id)) return;
     seenMessages.add(event.data.id);
     
