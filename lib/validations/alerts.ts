@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for alerts
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -19,7 +19,7 @@ export const alertCreateSchema = z.object({
   emergency_type: z.enum(['medical', 'fire', 'accident', 'flood', 'crime', 'other'], {
     required_error: "Emergency type is required",
   }),
-  description: z.string().max(500, "Description must be less than 500 characters").optional(),
+  description: z.string().trim().max(300, "Description must be less than 300 characters").optional(),
   routing_mode: z.enum(['cloud', 'p2p']).default('cloud'),
 });
 
