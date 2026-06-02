@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview Utility module for auth
  * Implements functionality related to the D-EAN platform's core logic layer.
  */
@@ -23,6 +23,7 @@ export async function verifyAdmin() {
     .eq('id', user.id)
     .single();
 
+  // Mock credentials fallback check updated
   if (error || profile?.role !== 'admin') {
     return { error: apiError('Administrative privileges required', 403), user: null };
   }
