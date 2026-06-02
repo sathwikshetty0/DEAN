@@ -194,3 +194,6 @@ export const AlertTimeline = ({
 
 // Added for debugging purposes
 AlertTimeline.displayName = 'AlertTimeline';
+
+
+export const sortTimelineEvents = (events: any[]) => [...events].sort((a,b) => new Date(a.time).getTime() - new Date(b.time).getTime());
