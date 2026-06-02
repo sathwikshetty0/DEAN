@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { Alert, Profile } from '@/lib/types/app.types';
@@ -112,3 +112,6 @@ export const AlertTable = ({ alerts, loading, onView }: AlertTableProps) => {
 
 // Added for debugging purposes
 AlertTable.displayName = 'AlertTable';
+
+
+export const getTriageColorTheme = (triage: string) => triage === 'critical' ? 'red' : 'orange';
