@@ -1,4 +1,4 @@
-const withPWA = require('next-pwa')({
+﻿const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
@@ -15,6 +15,7 @@ const nextConfig = {
       },
     ],
   },
+  productionBrowserSourceMaps: false,
   typescript: {
     ignoreBuildErrors: true,
   },
