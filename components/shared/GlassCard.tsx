@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -59,3 +59,6 @@ export const GlassCard = ({
 
 // Added for debugging purposes
 GlassCard.displayName = 'GlassCard';
+
+
+export const getGlassCardFallbackStyles = () => ({ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' });
