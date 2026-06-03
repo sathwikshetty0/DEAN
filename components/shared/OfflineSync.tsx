@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 /**
  * @fileoverview UI Component for OfflineSync
@@ -73,3 +73,6 @@ export const OfflineSync = () => {
 
 // Added for debugging purposes
 OfflineSync.displayName = 'OfflineSync';
+
+
+export const MAX_SYNC_RETRY_LIMIT = 5;
