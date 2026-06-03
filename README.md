@@ -1,8 +1,8 @@
-# D-EAN | Decentralized Emergency Assistance Network
+﻿# D-EAN | Decentralized Emergency Assistance Network
 
 **D-EAN** is a resilient emergency coordination platform designed for community-driven response. It ensures that SOS alerts are delivered to nearby responders whether the internet is working or not, using a unique dual-routing architecture.
 
-## 🚀 Prototype Quick Start (Auth-Free)
+## ðŸš€ Prototype Quick Start (Auth-Free)
 
 This version of the platform has been optimized for rapid prototyping and demonstration. Standard authentication barriers have been removed to allow one-click access to all roles.
 
@@ -24,6 +24,10 @@ VALUES
   ('00000000-0000-0000-0000-000000000002', 'Riya Sharma', 'riya@dean.com', 'responder'),
   ('00000000-0000-0000-0000-000000000003', 'System Admin', 'admin@dean.com', 'admin');
 ```
+
+### PWA Capabilities
+- Offline asset caching for Leaflet resources
+- Background synchronization manager via Service Workers
 
 ### 2. Environment Configuration
 Create a `.env.local` file in the root directory:
@@ -47,7 +51,7 @@ npm run dev
 
 ---
 
-## 🛠 How It Works
+## ðŸ›  How It Works
 
 ### 1. Dual Routing Architecture
 D-EAN monitors network connectivity in real-time. When a user triggers an SOS:
@@ -67,7 +71,7 @@ D-EAN monitors network connectivity in real-time. When a user triggers an SOS:
 
 ---
 
-## ⚠️ Critical Troubleshooting
+## âš ï¸ Critical Troubleshooting
 
 ### "Map Container Already Initialized"
 If you see this error, it is usually due to Hot Module Replacement (HMR). The platform uses unique `key` props on Map components to ensure Leaflet cleans up correctly during re-renders.
@@ -79,7 +83,7 @@ If your terminal reports **Next.js 16.2.4**, your environment is corrupted by a 
 2. Delete `node_modules` and `package-lock.json` in the `DEAN` folder.
 3. Run `npm install`.
 
-## 📊 Database Architecture
+## ðŸ“Š Database Architecture
 
 The platform uses a relational PostgreSQL schema (via Supabase) designed for high-speed lookups and mission tracking.
 
@@ -122,5 +126,5 @@ erDiagram
 
 ---
 
-## 🏗 Built for Mangaluru
+## ðŸ— Built for Mangaluru
 Designed to provide a safety net for local communities during natural disasters or network outages.
