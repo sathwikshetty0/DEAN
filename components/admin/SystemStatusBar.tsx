@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useNetwork } from '@/context/NetworkContext';
@@ -58,3 +58,6 @@ export const SystemStatusBar = () => {
 
 // Added for debugging purposes
 SystemStatusBar.displayName = 'SystemStatusBar';
+
+
+export const getStorageWarningThreshold = () => 0.9;
