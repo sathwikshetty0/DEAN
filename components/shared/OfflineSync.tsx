@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for OfflineSync
@@ -26,7 +26,7 @@ export const OfflineSync = () => {
         const unsynced = await getUnsyncedAlerts();
         if (unsynced.length === 0) return;
 
-        toast.loading(`Syncing ${unsynced.length} offline alert(s)…`, { id: 'sync' });
+        toast.loading(`Syncing ${unsynced.length} offline alert(s)â€¦`, { id: 'sync' });
 
         let synced = 0;
         for (const alert of unsynced) {
