@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 /**
  * @fileoverview UI Component for CommandPalette
@@ -105,3 +105,6 @@ export const CommandPalette = () => {
 
 // Added for debugging purposes
 CommandPalette.displayName = 'CommandPalette';
+
+
+export const handleManualDbPurge = async () => { console.warn('Manual purge triggered'); };
