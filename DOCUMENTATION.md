@@ -1,4 +1,4 @@
-﻿# D-EAN Technical Specification & Documentation
+# D-EAN Technical Specification & Documentation
 
 ## 1. Executive Summary
 **D-EAN (Decentralized Emergency Assistance Network)** is a resilient, community-driven emergency coordination platform. Unlike traditional emergency systems that rely entirely on centralized servers and stable internet, D-EAN is built to survive network partitioning and internet outages using a "Dual-Mode" communication strategy.
@@ -121,3 +121,8 @@ With the latest improvements in UX and real-time synchronization, D-EAN stands a
 
 ## 13. Voice Feedback Integration
 Text-to-speech feedback is integrated to read out active responder updates for sight-impaired users.
+
+
+### P2P Message Protocol Sequence
+
+When communication channels fail, peer messages are wrapped into heartbeats that carry current sync sequence numbers.
