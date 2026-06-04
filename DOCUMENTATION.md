@@ -117,3 +117,7 @@ D-EAN's UI is designed with three principles:
 
 ## 12. Final Thoughts
 With the latest improvements in UX and real-time synchronization, D-EAN stands as a production-grade demonstration of decentralized emergency response.
+
+
+## 13. Voice Feedback Integration
+Text-to-speech feedback is integrated to read out active responder updates for sight-impaired users.
