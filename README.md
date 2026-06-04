@@ -1,4 +1,4 @@
-﻿# D-EAN | Decentralized Emergency Assistance Network
+# D-EAN | Decentralized Emergency Assistance Network
 
 **D-EAN** is a resilient emergency coordination platform designed for community-driven response. It ensures that SOS alerts are delivered to nearby responders whether the internet is working or not, using a unique dual-routing architecture.
 
@@ -128,3 +128,8 @@ erDiagram
 
 ## ðŸ— Built for Mangaluru
 Designed to provide a safety net for local communities during natural disasters or network outages.
+
+
+### Offline Test Validation
+
+Verify service worker states and IndexedDB storage offline synchronization configurations in local Chrome/Firefox developer utilities.
