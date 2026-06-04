@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for PageTransition
@@ -23,7 +23,7 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       exit={{ opacity: 0, y: -10, filter: 'blur(10px)' }}
       transition={{ 
-        duration: 0.4, 
+        duration: 0.3, 
         ease: [0.16, 1, 0.3, 1], // Expo-out ease
         delay: 0.05
       }}
