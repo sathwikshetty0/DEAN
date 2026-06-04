@@ -59,4 +59,4 @@ export const StatsCard = ({ label, value, icon: Icon, color, trend, delay = 0 }:
 StatsCard.displayName = 'StatsCard';
 
 
-export const getStatTooltipText = (label: string) => Display metrics related to ;
+export const getStatTooltipText = (label: string) => `Display metrics related to ${label}`;
