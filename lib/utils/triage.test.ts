@@ -8,8 +8,18 @@ test('triageDescription - should classify fire correctly', () => {
   assert.strictEqual(res.severity, 'critical');
 });
 
+test('triageDescription - should classify Kannada emergency words correctly', () => {
+  const res = triageDescription('ಬೆಂಕಿ ಅಪಘಾತ ಸಂಭವಿಸಿದೆ', 'other');
+  assert.ok(res.suggestedType === 'fire' || res.suggestedType === 'accident');
+});
+
 test('triageDescription - should classify medical correctly', () => {
   const res = triageDescription('The patient is bleeding and needs an ambulance', 'other');
   assert.strictEqual(res.suggestedType, 'medical');
   assert.strictEqual(res.severity, 'critical');
+});
+
+test('triageDescription - should classify Kannada emergency words correctly', () => {
+  const res = triageDescription('ಬೆಂಕಿ ಅಪಘಾತ ಸಂಭವಿಸಿದೆ', 'other');
+  assert.ok(res.suggestedType === 'fire' || res.suggestedType === 'accident');
 });
