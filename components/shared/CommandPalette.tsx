@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * @fileoverview UI Component for CommandPalette
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, Shield, Activity, LayoutDashboard, Siren } from 'lucide-react';
 const COMMANDS = [
+  { id: 'offline-sim', label: 'Simulate Offline Mode', href: '#', icon: Activity, keys: 'offline simulated' },
   { id: 'home', label: 'Landing page', href: '/', icon: LayoutDashboard, keys: 'home' },
   { id: 'sos', label: 'Quick SOS', href: '/sos', icon: Siren, keys: 'sos emergency' },
   { id: 'user', label: 'Citizen dashboard', href: '/dashboard', icon: Heart, keys: 'user citizen' },
@@ -72,7 +73,7 @@ export const CommandPalette = () => {
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Jump to… (Ctrl+K)"
+                placeholder="Jump toâ€¦ (Ctrl+K)"
                 className="flex-1 bg-transparent text-sm outline-none"
               />
               <kbd className="text-[9px] px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-muted)]">ESC</kbd>
