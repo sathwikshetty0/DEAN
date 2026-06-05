@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for seedData
+ * Implements functionality related to the Bill platform's core logic layer.
+ */
 import { Product, ShopSettings } from './types';
 
 export const defaultSettings: ShopSettings = {
