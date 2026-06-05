@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for NetworkBadge
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { clsx } from 'clsx';
 import { useNetwork } from '@/context/NetworkContext';
