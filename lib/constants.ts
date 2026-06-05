@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for constants
+ * Implements functionality related to the Bill platform's core logic layer.
+ */
 // ──────────────────────────────────────────
 // localStorage Keys
 // ──────────────────────────────────────────
