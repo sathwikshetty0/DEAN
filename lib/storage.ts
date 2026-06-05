@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview Utility module for storage
+ * Implements functionality related to the Bill platform's core logic layer.
+ */
+
 import { STORAGE_KEYS } from './constants';
 import { Bill, Product, ShopSettings } from './types';
 import { defaultProducts, defaultSettings } from './seedData';
