@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for EmergencyTypeSelector
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
+
 import React from 'react';
 import { EmergencyType } from '@/lib/types/app.types';
 import { clsx } from 'clsx';
