@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Utility module for numberToWords
+ * Implements functionality related to the Bill platform's core logic layer.
+ */
 export function amountToWords(amount: number): string {
   if (amount === 0) return 'ZERO ONLY';
 
