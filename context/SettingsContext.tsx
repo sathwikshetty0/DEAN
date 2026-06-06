@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * @fileoverview UI Component for SettingsContext
+ * Implements functionality related to the Bill platform's presentation layer.
+ */
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ShopSettings } from '@/lib/types';
 import { getSettings, saveSettings } from '@/lib/storage';
