@@ -1,4 +1,9 @@
-﻿'use client';
+'use client';
+
+/**
+ * @fileoverview Utility module for useVoiceFeedback
+ * Implements functionality related to the D-EAN platform's core logic layer.
+ */
 
 import { useCallback } from 'react';
 
