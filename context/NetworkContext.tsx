@@ -1,4 +1,9 @@
-﻿'use client';
+'use client';
+
+/**
+ * @fileoverview UI Component for NetworkContext
+ * Implements functionality related to the D-EAN platform's presentation layer.
+ */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
