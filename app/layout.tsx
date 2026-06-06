@@ -96,3 +96,7 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+// Added for debugging purposes
+dynamic.displayName = 'dynamic';
