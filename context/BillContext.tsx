@@ -17,6 +17,7 @@ type BillAction =
   | { type: 'SET_DISCOUNT'; payload: { type: 'flat' | 'percentage'; value: number } }
   | { type: 'SET_NOTES'; payload: string }
   | { type: 'SET_REFERENCES'; payload: { supplierRef?: string; otherReference?: string } }
+  | { type: 'SET_DATE'; payload: string }
   | { type: 'RESET_BILL'; payload?: Partial<BillState> };
 
 interface BillContextType {
@@ -25,11 +26,12 @@ interface BillContextType {
   calculateTotals: () => { subtotal: number; cgst: number; sgst: number; discount: number; grandTotal: number };
 }
 
+// Default consignee: Katil Temple
 const defaultConsignee: Consignee = {
-  name: '',
-  address: '',
+  name: 'ಶ್ರೀ ದುರ್ಗಾನಾರಾಯಣೇಶ್ವರಿ ದೇವಸ್ಥಾನ ಕೂಟೇಲು',
+  address: 'ಕೇರಳ ಅಂಚೆ, ಮಂಗಲ್, ಕಾಸರಗೋಡ',
   city: '',
-  pincode: '',
+  pincode: '574148',
   gstin: '',
   buyerOrderNo: '',
   dated: new Date().toISOString().split('T')[0],
@@ -58,7 +60,7 @@ const initialState: BillState = {
   discountValue: 0,
   grandTotal: 0,
   notes: '',
-  lang: 'both',
+  lang: 'kn',
   gstEnabled: true,
   draft: true,
   supplierRef: '',
@@ -80,9 +82,12 @@ function billReducer(state: BillState, action: BillAction): BillState {
     case 'UPDATE_ITEM':
       return {
         ...state,
-        items: state.items.map(item => 
-          item.id === action.payload.id ? { ...item, ...action.payload.item, amount: (action.payload.item.quantity ?? item.quantity) * (action.payload.item.rate ?? item.rate) } : item
-        )
+        items: state.items.map(item => {
+          if (item.id !== action.payload.id) return item;
+          const updated = { ...item, ...action.payload.item };
+          updated.amount = updated.quantity * updated.rate;
+          return updated;
+        })
       };
     case 'REMOVE_ITEM':
       return { ...state, items: state.items.filter(item => item.id !== action.payload) };
@@ -92,6 +97,8 @@ function billReducer(state: BillState, action: BillAction): BillState {
       return { ...state, notes: action.payload };
     case 'SET_REFERENCES':
       return { ...state, ...action.payload };
+    case 'SET_DATE':
+      return { ...state, date: action.payload };
     case 'RESET_BILL':
       return { ...initialState, ...action.payload, date: new Date().toISOString().split('T')[0] };
     default:
@@ -104,12 +111,10 @@ const BillContext = createContext<BillContextType | undefined>(undefined);
 export function BillProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(billReducer, initialState);
 
-  // Initialize defaults from settings if empty
   useEffect(() => {
     const settings = getSettings();
-    if (state.items.length === 0 && state.consignee.name === '') {
-       dispatch({ type: 'SET_LANGUAGE', payload: settings.defaultLanguage });
-       dispatch({ type: 'SET_GST_ENABLED', payload: settings.gstOnByDefault });
+    if (state.items.length === 0) {
+      dispatch({ type: 'SET_GST_ENABLED', payload: settings.gstOnByDefault });
     }
   }, []);
 
@@ -119,13 +124,9 @@ export function BillProvider({ children }: { children: React.ReactNode }) {
     let totalSgst = 0;
 
     state.items.forEach(item => {
-      const amount = item.amount;
-      subtotal += amount;
-
+      subtotal += item.amount;
       if (state.gstEnabled && item.gstRate > 0) {
-        // Assuming the item rate is EXCLUSIVE of GST.
-        // If it's inclusive, math changes. Usually in these bills, GST is added on top.
-        const taxAmount = amount * (item.gstRate / 100);
+        const taxAmount = item.amount * (item.gstRate / 100);
         totalCgst += taxAmount / 2;
         totalSgst += taxAmount / 2;
       }
@@ -145,7 +146,7 @@ export function BillProvider({ children }: { children: React.ReactNode }) {
       cgst: Math.round(totalCgst * 100) / 100,
       sgst: Math.round(totalSgst * 100) / 100,
       discount: Math.round(discount * 100) / 100,
-      grandTotal: Math.round(grandTotal), // Bills are usually rounded to nearest Rupee
+      grandTotal: Math.round(grandTotal * 100) / 100,
     };
   };
 
