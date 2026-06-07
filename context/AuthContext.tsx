@@ -29,7 +29,11 @@ const MOCK_PROFILES: Record<string, Profile> = {
   admin: { id: '00000000-0000-0000-0000-000000000003', name: 'System Admin', email: 'admin@dean.com', role: 'admin' },
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
