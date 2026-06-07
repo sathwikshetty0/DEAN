@@ -17,9 +17,13 @@ interface AlertContextType {
   loading: boolean;
 }
 
+interface AlertProviderProps {
+  children: React.ReactNode;
+}
+
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
-export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
+export const AlertProvider = ({ children }: AlertProviderProps) => {
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
