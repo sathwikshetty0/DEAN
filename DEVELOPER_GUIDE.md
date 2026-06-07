@@ -4,10 +4,10 @@ Welcome to the **Decentralized Emergency Assistance Network (D-EAN)**. This guid
 
 ## ðŸ—ï¸ Architecture Overview
 
-D-EAN is built with **Next.js 14**, **Supabase**, and **Tailwind CSS**. It is designed to be a **Resilient Web App**, capable of functioning even during internet outages.
+D-EAN is built with **Next.js 16**, **Supabase**, and **Tailwind CSS**. It is designed to be a **Resilient Web App**, capable of functioning even during internet outages.
 
 ### Core Technologies
-- **Frontend**: Next.js (App Router), Framer Motion (Animations), Leaflet (Maps).
+- **Frontend**: Next.js 16 (App Router), React 19, Framer Motion (Animations), Leaflet (Maps).
 - **Backend**: Supabase (Auth, DB, Real-time), Next.js API Routes.
 - **Resilience**: PWA (Service Workers), IndexedDB v2 (Offline Storage), BroadcastChannel API (P2P Mesh Simulation).
 
