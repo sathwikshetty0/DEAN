@@ -5,7 +5,7 @@ import { Bill, ShopSettings } from '@/lib/types';
 
 export const generatePdfBlob = async (bill: Bill, settings: ShopSettings): Promise<Blob> => {
   const document = React.createElement(InvoiceDocument, { bill, settings });
-  const asPdf = pdf(document);
+  const asPdf = pdf(document as any);
   return await asPdf.toBlob();
 };
 
