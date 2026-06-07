@@ -15,9 +15,13 @@ interface NetworkContextType {
   mode: RoutingMode;
 }
 
+interface NetworkProviderProps {
+  children: React.ReactNode;
+}
+
 const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
 
-export const NetworkProvider = ({ children }: { children: React.ReactNode }) => {
+export const NetworkProvider = ({ children }: NetworkProviderProps) => {
   const [isOnline, setIsOnline] = useState(true);
   const [mode, setMode] = useState<RoutingMode>('cloud');
 
