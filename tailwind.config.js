@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+// Tailwind CSS configuration for D-EAN platform
+// Uses CSS variables defined in globals.css for consistent theming
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
