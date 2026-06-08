@@ -7,5 +7,16 @@
 
 export { useNetwork } from '@/context/NetworkContext';
 
-
-export const handleVisibilityNetworkVerification = (verify: () => void) => { if (typeof document !== 'undefined') { document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') verify(); }); } };
+/**
+ * Triggers network verification when the document becomes visible
+ * Useful for re-establishing connections when the app regains focus
+ */
+export const handleVisibilityNetworkVerification = (verify: () => void) => {
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        verify();
+      }
+    });
+  }
+};
