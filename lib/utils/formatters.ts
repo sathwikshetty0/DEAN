@@ -34,10 +34,20 @@ export const formatRelativeTime = (dateStr: string): string => {
 
 export const formatPhone = (phone: string): string => {
   const cleaned = ('' + phone).replace(/\D/g, '');
-  const match = cleaned.match(/^(\d{2})(\d{5})(\d{5})$/);
-  if (match) {
-    return `+${match[1]} ${match[2]}-${match[3]}`;
+
+  if (/^0\d{10}$/.test(cleaned)) {
+    const normalized = cleaned.slice(1);
+    return `+91 ${normalized.slice(0, 5)}-${normalized.slice(5)}`;
   }
+
+  if (/^\d{10}$/.test(cleaned)) {
+    return `+91 ${cleaned.slice(0, 5)}-${cleaned.slice(5)}`;
+  }
+
+  if (/^91\d{10}$/.test(cleaned)) {
+    return `+${cleaned.slice(0, 2)} ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
+  }
+
   return phone;
 };
 
