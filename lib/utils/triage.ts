@@ -29,7 +29,7 @@ const RULES: Rule[] = [
     type: 'fire',
     patterns: [
       /\b(fire|smoke|burning|flame|blaze|ignit|gas leak)\b/i,
-      /\b(à²¬à³†à²‚à²•à²¿|à²¹à³Šà²¤à³à²¤à²¿)\b/,
+      /(ಬೆಂಕಿ|ಹುರಿದ|ಶಾಖ|ಸ್ಮೋಕ)/iu,
     ],
     weight: 0.95,
     severity: 'critical',
@@ -39,7 +39,7 @@ const RULES: Rule[] = [
     type: 'medical',
     patterns: [
       /\b(heart|cardiac|chest pain|breath|unconscious|bleed|stroke|seizure|medical|ambulance|injured)\b/i,
-      /\b(à²šà²¾à²¤à³à²°à³à²¯|à²‰à²¸à²¿à²°à²¾à²Ÿ|à²°à²•à³à²¤)\b/,
+      /(ರಕ್ತಸ್ರಾವ|ಗಾಯ|ಆಂಬುಲನ್ಸ್|ಮರೆತ|ಅಸ್ವಸ್ಥ)/iu,
     ],
     weight: 0.98,
     severity: 'critical',
@@ -49,6 +49,7 @@ const RULES: Rule[] = [
     type: 'accident',
     patterns: [
       /\b(crash|accident|collision|hit by|overturn|vehicle|road)\b/i,
+      /(ಅಪಘಾತ|ದುರಂತ|ವಾಹನ|ರಸ್ತೆ)/iu,
     ],
     weight: 0.92,
     severity: 'high',
@@ -58,7 +59,7 @@ const RULES: Rule[] = [
     type: 'flood',
     patterns: [
       /\b(flood|water rising|drown|submerged|landslide|cyclone|rain)\b/i,
-      /\b(à²ªà³à²°à²µà²¾à²¹|à²¨à³€à²°à³)\b/,
+      /(ಜಲಪಾತ|ಮಳೆ|ನೀರು|ಭೂಕಂಪ)/iu,
     ],
     weight: 0.88,
     severity: 'high',
